@@ -1,0 +1,185 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+/*
+ * Royal Infra Realty design system.
+ * Only five palette colours (and alpha tints) are allowed. No gradients anywhere.
+ */
+
+@theme inline {
+  --font-display: "Fraunces Variable", Georgia, serif;
+  --font-sans: "Instrument Sans Variable", system-ui, sans-serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-rosewood: var(--rosewood);
+  --color-olive: var(--olive);
+  --color-terracotta: var(--terracotta);
+  --color-limestone: var(--limestone);
+  --color-charcoal: var(--charcoal);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --radius: 0.25rem;
+  --rosewood: oklch(0.37 0.05 35);
+  --olive: oklch(0.53 0.04 125);
+  --terracotta: oklch(0.62 0.1 45);
+  --limestone: oklch(0.89 0.03 80);
+  --charcoal: oklch(0.27 0.01 90);
+
+  --background: var(--limestone);
+  --foreground: var(--charcoal);
+  --card: var(--limestone);
+  --card-foreground: var(--charcoal);
+  --popover: var(--limestone);
+  --popover-foreground: var(--charcoal);
+  --primary: var(--charcoal);
+  --primary-foreground: var(--limestone);
+  --secondary: var(--rosewood);
+  --secondary-foreground: var(--limestone);
+  --muted: var(--olive);
+  --muted-foreground: oklch(0.27 0.01 90 / 0.72);
+  --accent: var(--terracotta);
+  --accent-foreground: var(--charcoal);
+  --destructive: var(--rosewood);
+  --destructive-foreground: var(--limestone);
+  --border: oklch(0.27 0.01 90 / 0.15);
+  --input: oklch(0.27 0.01 90 / 0.3);
+  --ring: var(--charcoal);
+
+  --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-wipe: cubic-bezier(0.65, 0, 0.35, 1);
+  --gutter: clamp(16px, 2.5vw, 40px);
+  --section-y: clamp(96px, 16vh, 220px);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  html.lenis {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  body {
+    overflow-x: clip;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 350;
+    letter-spacing: -0.02em;
+    font-optical-sizing: auto;
+  }
+  :focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+}
+
+@utility container-x {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+@utility section-y {
+  padding-block: var(--section-y);
+}
+@utility text-display-xl {
+  font-family: var(--font-display);
+  font-size: clamp(3.25rem, 8.5vw, 9rem);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  font-weight: 330;
+}
+@utility text-display-l {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 6rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-weight: 340;
+}
+@utility text-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-weight: 350;
+}
+@utility text-h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.375rem, 2vw, 1.875rem);
+  line-height: 1.2;
+  font-weight: 400;
+}
+@utility measure {
+  max-width: 64ch;
+}
+@utility arch {
+  border-radius: 999px 999px 0 0;
+}
+@utility tag {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.8rem;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+@utility hairline {
+  border-color: color-mix(in oklab, currentColor 18%, transparent);
+}
+
+.marquee-track {
+  animation: marquee 38s linear infinite;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}

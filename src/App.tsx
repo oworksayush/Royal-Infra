@@ -15,6 +15,8 @@ import { PrivacyPolicyPage } from "@/pages/PrivacyPolicyPage";
 import { ProjectPage } from "@/pages/ProjectPage";
 import { ProjectsPage } from "@/pages/ProjectsPage";
 import { TermsPage } from "@/pages/TermsPage";
+import { GalleryPage } from "@/pages/GalleryPage";
+import { SiteEnquiryPopup } from "@/components/SiteEnquiryPopup";
 import "./styles.css";
 
 const homeMeta = {
@@ -24,10 +26,53 @@ const homeMeta = {
 };
 
 export default function App() {
-  const pathname = window.location.pathname;
+  const [pathname, setPathname] = useState(() => window.location.pathname);
   const route = matchRoute(pathname);
   const [footerHeight, setFooterHeight] = useState(0);
   const onFooterHeight = useCallback((height: number) => setFooterHeight(height), []);
+
+  // Intercept internal link clicks for seamless SPA page switching without page reload
+  useEffect(() => {
+    const handlePopState = () => {
+      setPathname(window.location.pathname);
+      window.scrollTo(0, 0);
+    };
+    window.addEventListener("popstate", handlePopState);
+
+    const handleLinkClick = (e: MouseEvent) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+
+      const anchor = (e.target as HTMLElement).closest("a");
+      if (!anchor) return;
+
+      const href = anchor.getAttribute("href");
+      if (!href) return;
+
+      if (
+        href.startsWith("#") ||
+        href.startsWith("mailto:") ||
+        href.startsWith("tel:") ||
+        href.startsWith("http://") ||
+        href.startsWith("https://") ||
+        anchor.target === "_blank"
+      ) {
+        return;
+      }
+
+      e.preventDefault();
+      if (window.location.pathname !== href) {
+        window.history.pushState(null, "", href);
+        setPathname(href);
+        window.scrollTo(0, 0);
+      }
+    };
+
+    document.addEventListener("click", handleLinkClick);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+      document.removeEventListener("click", handleLinkClick);
+    };
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -81,6 +126,9 @@ export default function App() {
     case "project":
       page = <ProjectPage slug={route.slug} />;
       break;
+    case "gallery":
+      page = <GalleryPage />;
+      break;
     case "privacy":
       page = <PrivacyPolicyPage />;
       break;
@@ -107,6 +155,7 @@ export default function App() {
       </main>
       <Footer onHeight={onFooterHeight} />
       <FloatingActions />
+      <SiteEnquiryPopup />
     </>
   );
 }
@@ -126,6 +175,11 @@ function getPageMetadata(pathname: string) {
       return locationsPage.meta;
     case "projects":
       return projectsPage.meta;
+    case "gallery":
+      return {
+        title: "Video Gallery | Royal Infra Realty",
+        description: "Watch project walkthroughs, community highlights, and the Royal Infra Realty story through our curated video gallery.",
+      };
     case "privacy":
       return {
         title: "Privacy Policy | Royal Infra Realty",

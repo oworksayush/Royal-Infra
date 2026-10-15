@@ -11,7 +11,7 @@ export const site = {
   whatsappHref: "https://wa.me/919822091295",
   footerText:
     "70+ years of entrepreneurial legacy dedicated to building premium real estate across Karnataka.",
-  copyright: "© 2026 Royal Infra Realty. All rights reserved.",
+  copyright: "© 2026 Royal Infra Realty. All rights reserved. Made with ❤ by peoplecom",
   social: [
     { label: "Facebook", href: "https://www.facebook.com/RoyalInfraRealty" },
     { label: "Instagram", href: "https://www.instagram.com/royalinfrarealty/" },
@@ -28,6 +28,7 @@ export const nav = [
   { label: "About", to: "/about-us" },
   { label: "Projects", to: "/projects" },
   { label: "Locations", to: "/locations" },
+  { label: "Gallery", to: "/gallery" },
   { label: "Contact", to: "/contact-us" },
 ] as const;
 
@@ -36,5 +37,6 @@ export const quickLinks = [
   { label: "About", to: "/about-us" },
   { label: "Projects", to: "/projects" },
   { label: "Locations", to: "/locations" },
+  { label: "Gallery", to: "/gallery" },
   { label: "Contact", to: "/contact-us" },
 ] as const;

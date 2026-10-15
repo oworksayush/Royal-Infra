@@ -183,3 +183,23 @@
     animation: none;
   }
 }
+
+/* Custom architectural scrollbar for FAQ scroll container */
+.faq-scroll-box {
+  scrollbar-width: thin;
+  scrollbar-color: var(--terracotta) transparent;
+}
+.faq-scroll-box::-webkit-scrollbar {
+  width: 5px;
+}
+.faq-scroll-box::-webkit-scrollbar-track {
+  background: color-mix(in oklab, var(--charcoal) 8%, transparent);
+}
+.faq-scroll-box::-webkit-scrollbar-thumb {
+  background: var(--terracotta);
+  border-radius: 9999px;
+}
+.faq-scroll-box::-webkit-scrollbar-thumb:hover {
+  background: var(--rosewood);
+}
+

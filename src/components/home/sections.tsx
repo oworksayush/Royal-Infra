@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type React from "react";
 import {
   AnimatePresence,
@@ -41,7 +41,7 @@ function HeroInner({ pinned }: { pinned: boolean }) {
 
   const copy = (
     <div className="relative z-10">
-      
+
       <h1 className="mt-8">
         <span className="block max-w-xl font-sans text-base font-medium leading-snug tracking-normal text-limestone/80">{hero.kicker}</span>
         <span className="mt-6 block max-w-[12ch] font-display text-[clamp(2.75rem,5.4vw,6.25rem)] font-[330] leading-[0.98] tracking-[-0.025em]">
@@ -459,39 +459,173 @@ function TestimonialsInner({ pinned, intro }: { pinned: boolean; intro: Intro })
   );
 }
 
-export function Faq({ items = faqs, intro = faqIntro }: { items?: { q: string; a: string }[]; intro?: Intro } = {}) {
+export function Faq({
+  items = faqs,
+  intro = faqIntro,
+}: {
+  items?: { q: string; a: string }[];
+  intro?: Intro;
+} = {}) {
   const [open, setOpen] = useState<number | null>(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [canScrollDown, setCanScrollDown] = useState(true);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Monitor internal scroll position and progress
+  const checkScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const maxScroll = el.scrollHeight - el.clientHeight;
+    if (maxScroll <= 0) {
+      setScrollProgress(100);
+      setCanScrollDown(false);
+      return;
+    }
+    const current = el.scrollTop;
+    setScrollProgress(Math.min(100, Math.max(0, Math.round((current / maxScroll) * 100))));
+    setCanScrollDown(current < maxScroll - 6);
+  };
+
+  useEffect(() => {
+    checkScroll();
+  }, [items, open]);
+
+  // Lock wheel scrolling strictly inside FAQ box when hovering:
+  // When cursor is inside the FAQ box, scrolling stays within the box and never moves the page!
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const onWheel = (e: WheelEvent) => {
+      const atTop = el.scrollTop <= 0 && e.deltaY < 0;
+      const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1 && e.deltaY > 0;
+
+      // Keep event from bubbling up to page or Lenis
+      e.stopPropagation();
+
+      // At top or bottom boundaries, prevent default so parent page doesn't scroll while hovering
+      if (atTop || atBottom) {
+        e.preventDefault();
+      }
+    };
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
+
   return (
     <section aria-labelledby="faq-h" className="section-y bg-limestone">
       <div className="container-x grid gap-12 lg:grid-cols-12">
+        {/* ── Left Column: Sticky Title & Interactive Indicator ("the other side") ── */}
         <div className="lg:col-span-4">
           <div className="lg:sticky lg:top-28">
             <Eyebrow>{intro.eyebrow}</Eyebrow>
-            <h2 id="faq-h" className="text-h2 mt-6">{intro.title}</h2>
+            <h2 id="faq-h" className="text-h2 mt-6">
+              {intro.title}
+            </h2>
+
+            {/* Interactive Scroll Status & Indicator */}
+            <div className="mt-8 border-t border-charcoal/15 pt-6 hidden sm:block">
+              <div className="flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.16em]">
+              </div>
+
+              <p className="mt-3 text-xs text-charcoal/50 max-w-[28ch] leading-relaxed">
+                Hover or touch outside the box on this side to scroll the website.
+              </p>
+            </div>
           </div>
         </div>
-        <ul className="border-t border-charcoal/15 lg:col-span-7 lg:col-start-6">
-          {items.map((f, i) => {
-            const isOpen = open === i;
-            return (
-              <li key={f.q} className="border-b border-charcoal/15">
-                <h3>
-                  <button type="button" aria-expanded={isOpen} aria-controls={`faq-${i}`} onClick={() => setOpen(isOpen ? null : i)}
-                    className="flex w-full items-center justify-between gap-6 py-6 text-left font-display text-[1.35rem] leading-snug">
-                    {f.q}
-                    <span aria-hidden className="relative h-4 w-4 shrink-0">
-                      <span className="absolute left-0 top-1/2 h-px w-4 bg-charcoal" />
-                      <span className={cn("absolute left-0 top-1/2 h-px w-4 bg-charcoal transition-transform duration-300", !isOpen && "rotate-90")} />
-                    </span>
-                  </button>
-                </h3>
-                <motion.div id={`faq-${i}`} initial={false} animate={{ height: isOpen ? "auto" : 0 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} className="overflow-hidden">
-                  <p className="measure pb-6">{f.a}</p>
-                </motion.div>
-              </li>
-            );
-          })}
-        </ul>
+
+        {/* ── Right Column: Framed FAQ Scroll Container ── */}
+        <div className="lg:col-span-7 lg:col-start-6">
+          <div
+            className={cn(
+              "relative bg-limestone border transition-all duration-300 overflow-hidden",
+              isHovered
+                ? "border-charcoal/30 shadow-lg shadow-charcoal/5"
+                : "border-charcoal/15"
+            )}
+          >
+            {/* Top Minimalist Header */}
+            <div className="flex items-center justify-between border-b border-charcoal/10 px-6 py-3.5 bg-charcoal/[0.03]">
+              <span className="text-[11px] font-medium tracking-[0.18em] uppercase text-charcoal/60">
+                Frequently Asked Questions
+              </span>
+            </div>
+
+            {/* Scrollable Questions List with Lenis Prevent */}
+            <div
+              ref={scrollRef}
+              data-lenis-prevent="true"
+              onScroll={checkScroll}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              className="faq-scroll-box max-h-[460px] sm:max-h-[520px] lg:max-h-[560px] overflow-y-auto overscroll-contain px-6 sm:px-8 py-2"
+              style={{
+                overscrollBehavior: "contain",
+                WebkitOverflowScrolling: "touch",
+              }}
+            >
+              <ul className="divide-y divide-charcoal/10">
+                {items.map((f, i) => {
+                  const isOpen = open === i;
+                  return (
+                    <li key={f.q} className="py-2">
+                      <h3>
+                        <button
+                          type="button"
+                          aria-expanded={isOpen}
+                          aria-controls={`faq-${i}`}
+                          onClick={() => setOpen(isOpen ? null : i)}
+                          className="flex w-full items-center justify-between gap-6 py-4 text-left font-display text-[1.2rem] sm:text-[1.3rem] leading-snug transition-colors hover:text-terracotta"
+                        >
+                          <span>{f.q}</span>
+                          <span aria-hidden className="relative h-4 w-4 shrink-0">
+                            <span className="absolute left-0 top-1/2 h-px w-4 bg-charcoal" />
+                            <span
+                              className={cn(
+                                "absolute left-0 top-1/2 h-px w-4 bg-charcoal transition-transform duration-300",
+                                !isOpen && "rotate-90"
+                              )}
+                            />
+                          </span>
+                        </button>
+                      </h3>
+                      <motion.div
+                        id={`faq-${i}`}
+                        initial={false}
+                        animate={{ height: isOpen ? "auto" : 0 }}
+                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <p className="measure pb-5 pt-1 text-[0.95rem] leading-relaxed text-charcoal/80">
+                          {f.a}
+                        </p>
+                      </motion.div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            {/* Subtle Gradient Shadow Indicator at Bottom when more items exist */}
+            <div
+              aria-hidden
+              className={cn(
+                "pointer-events-none absolute bottom-0 inset-x-0 h-10 bg-gradient-to-t from-limestone via-limestone/80 to-transparent transition-opacity duration-300",
+                canScrollDown ? "opacity-100" : "opacity-0"
+              )}
+            />
+
+            {/* Bottom Status / Guidance Bar */}
+            <div className="flex items-center justify-between border-t border-charcoal/10 px-6 py-2.5 bg-charcoal/[0.02] text-[11px] text-charcoal/50">
+              <span className="hidden sm:inline font-mono text-[10px]">
+                Hover outside box to scroll page
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -510,8 +644,8 @@ export function Cta({ title = cta.title, body = cta.body, children }: { title?: 
         <p className="mt-6 max-w-md text-lg">{body}</p>
         <div className="mt-10 flex flex-wrap gap-3">
           {children ?? <>
-          <ButtonLink href="/contact-us" tone="light">Enquire Now</ButtonLink>
-          <ButtonA href={site.phoneHref} tone="light" className="bg-transparent text-limestone outline outline-1 outline-limestone/50">Call {site.phone}</ButtonA>
+            <ButtonLink href="/contact-us" tone="light">Enquire Now</ButtonLink>
+            <ButtonA href={site.phoneHref} tone="light" className="bg-transparent text-limestone outline outline-1 outline-limestone/50">Call {site.phone}</ButtonA>
           </>}
         </div>
       </motion.div>

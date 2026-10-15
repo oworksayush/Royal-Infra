@@ -86,7 +86,7 @@ export const contactPage = {
   h2: "Reach Out to Us",
   body: "Have questions about our plotted developments or wish to schedule a guided site visit? Our advisory team is available 6 days a week.",
   formTitle: "Send an Enquiry",
-  projectOptions: ["Palm Serenity (Mysuru)", "Royal Park (Gadag)", "Dollars Colony (Gundlupet)", "General Real Estate Inquiry"],
+  projectOptions: ["Palm Serenity (Mysuru)", "Royal Park (Gadag)", "Dollars Colony (Gundlupet)", "Commercial Projects (Bellary)", "General Inquiry"],
   mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.892095361208!2d77.5960458!3d12.9787498!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae16719b0d24e1%3A0xc3b8398e4f52627e!2sInfantry%20Rd%2C%20Bengaluru%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1690000000000!5m2!1sen!2sin",
   cta: { title: "Explore Our Properties", body: "Discover plots and residential communities across Karnataka." },
 };

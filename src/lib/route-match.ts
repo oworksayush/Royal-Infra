@@ -5,6 +5,7 @@ export type AppRoute =
   | { page: "locations" }
   | { page: "projects" }
   | { page: "project"; slug: string }
+  | { page: "gallery" }
   | { page: "privacy" }
   | { page: "terms" }
   | { page: "not-found" };
@@ -23,6 +24,8 @@ export function matchRoute(pathname: string): AppRoute {
       return { page: "locations" };
     case "/projects":
       return { page: "projects" };
+    case "/gallery":
+      return { page: "gallery" };
     case "/privacy-policy":
       return { page: "privacy" };
     case "/terms-of-use":

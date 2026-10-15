@@ -40,50 +40,7 @@ export function ScrollProgress() {
   );
 }
 
-export function Preloader() {
-  const [show, setShow] = useState(false);
-  const [n, setN] = useState(0);
-  useEffect(() => {
-    try {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      if (sessionStorage.getItem("ri-loaded")) return;
-      sessionStorage.setItem("ri-loaded", "1");
-    } catch {
-      return;
-    }
-    setShow(true);
-    const start = performance.now();
-    let raf = 0;
-    const tick = (t: number) => {
-      const p = Math.min(1, (t - start) / 1100);
-      setN(Math.round(p * 100));
-      if (p < 1) raf = requestAnimationFrame(tick);
-      else setTimeout(() => setShow(false), 150);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, []);
-  return (
-    <AnimatePresence>
-      {show && (
-        <motion.div
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-8 bg-charcoal text-limestone"
-          exit={{ y: "-100%" }}
-          transition={{ duration: 0.7, ease: [0.65, 0, 0.35, 1] }}
-        >
-          <motion.div
-            initial={{ clipPath: "inset(100% 0 0 0)" }}
-            animate={{ clipPath: "inset(0% 0 0 0)" }}
-            transition={{ duration: 0.8 }}
-          >
-            <Logo className="scale-150" />
-          </motion.div>
-          <span className="font-display text-6xl tabular-nums text-terracotta">{n}</span>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-}
+export { Preloader } from "./Preloader";
 
 /** Pages whose first section is light; header needs a solid bar there to stay legible. */
 const LIGHT_TOP = ["/contact-us", "/privacy-policy", "/terms-of-use"];
@@ -356,7 +313,7 @@ export function Footer({ onHeight }: { onHeight: (h: number) => void }) {
         </div>
         <p
           aria-hidden
-          className="mt-14 flex overflow-hidden font-display text-[clamp(3rem,10.4vw,10rem)] leading-[0.9] tracking-[-0.045em] sm:mt-16"
+          className="mt-14 flex overflow-hidden font-display text-[clamp(3rem,10.4vw,10rem)] leading-[1.2] tracking-[-0.045em] sm:mt-16"
         >
           {letters.map((l, i) => (
             <motion.span

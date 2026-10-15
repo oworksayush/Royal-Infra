@@ -11,7 +11,6 @@ import {
   WhereWeBuild,
   WhyChoose,
 } from "@/components/home/sections";
-import { HomeEnquiryPopup } from "@/components/home/HomeEnquiryPopup";
 
 export function HomePage() {
   return (
@@ -27,7 +26,6 @@ export function HomePage() {
       <Testimonials />
       <Faq />
       <Cta />
-      <HomeEnquiryPopup />
     </>
   );
 }

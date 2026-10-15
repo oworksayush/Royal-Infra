@@ -204,34 +204,7 @@ export function Header() {
   );
 }
 
-export function FloatingActions() {
-  const items = [
-    { href: site.phoneHref, label: `Call ${site.phone}`, icon: Phone },
-    { href: site.whatsappHref, label: "Chat on WhatsApp", icon: MessageCircle, external: true },
-  ];
-  return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 grid grid-cols-3 bg-charcoal text-limestone sm:bottom-6 sm:left-auto sm:right-6 sm:flex sm:flex-col sm:gap-3 sm:bg-transparent">
-      {items.map(({ href, label, icon: Icon, external }) => (
-        <a
-          key={href}
-          href={href}
-          aria-label={label}
-          {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-          className="flex h-14 items-center justify-center sm:h-12 sm:w-12 sm:rounded-full sm:bg-charcoal sm:outline sm:outline-1 sm:outline-limestone/20"
-        >
-          <Icon strokeWidth={1.25} className="h-5 w-5" />
-        </a>
-      ))}
-      <a
-        href="/contact-us"
-        aria-label="Send an enquiry"
-        className="flex h-14 items-center justify-center sm:h-12 sm:w-12 sm:rounded-full sm:bg-charcoal sm:outline sm:outline-1 sm:outline-limestone/20"
-      >
-        <Mail strokeWidth={1.25} className="h-5 w-5" />
-      </a>
-    </div>
-  );
-}
+export { FloatingActions } from "./FloatingActions";
 
 /** Curtain footer: fixed behind content; main wrapper reserves its height. */
 export function Footer({ onHeight }: { onHeight: (h: number) => void }) {

@@ -1,34 +1,41 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRef } from "react";
-import { Play } from "lucide-react";
-import { PageHeader, SectionHead } from "@/components/pages/shared";
-import { RiseText } from "@/components/motion/primitives";
+import { PageHeader } from "@/components/pages/shared";
 import { Cta } from "@/components/home/sections";
 import { ButtonLink } from "@/components/ui-brand";
 import { cn } from "@/lib/utils";
 
-/* ── Video data ───────────────────────────────────────────────── */
+/* ── Video Data ───────────────────────────────────────────────── */
 
-const heroVideo = {
+const mainVideo = {
   id: "FEN5jr72odk",
-  title: "Royal Infra Realty — Our Vision",
+  title: "Royal Infra Realty — Our Vision & Landmark Journey",
+  subtitle:
+    "An intimate exploration into our seventy-year philosophy of crafting sustainable gated communities, residential plots, and managed farmlands across Karnataka.",
+  badge: "Official Film",
 };
 
-const secondaryVideos = [
+const galleryVideos = [
   {
     id: "L_jche0H2_c",
+    num: "01",
+    tag: "Walkthrough",
     title: "Project Walkthrough",
-    subtitle: "Explore our flagship developments",
+    subtitle: "On-ground and aerial perspective of our master-planned plotted developments.",
   },
   {
     id: "oEZZevElcNU",
-    title: "Community Living",
-    subtitle: "Life at Royal Infra communities",
+    num: "02",
+    tag: "Community",
+    title: "Community & Sanctuary Living",
+    subtitle: "Life amidst open greenery, managed farmlands, and gated sanctuary living.",
   },
   {
     id: "CGcNjc8D0mg",
-    title: "Building Trust",
-    subtitle: "Our journey of 70+ years",
+    num: "03",
+    tag: "Heritage",
+    title: "Seven Decades of Trust",
+    subtitle: "The entrepreneurial legacy and enduring foundational values guiding every project.",
   },
 ];
 
@@ -41,7 +48,7 @@ const marqueeItems = [
   "Plots & Farmland",
 ] as const;
 
-/* ── Page ─────────────────────────────────────────────────────── */
+/* ── Page Component ───────────────────────────────────────────── */
 
 export function GalleryPage() {
   return (
@@ -53,8 +60,7 @@ export function GalleryPage() {
         marquee={marqueeItems}
         contours
       />
-      <HeroVideo />
-      <SecondaryVideos />
+      <VideoGallerySection />
       <Cta
         title="Ready to build your future?"
         body="Explore our premium plots and managed farmland across Karnataka."
@@ -74,106 +80,99 @@ export function GalleryPage() {
   );
 }
 
-/* ── S1 — Full-screen hero video ──────────────────────────────── */
+/* ── Unified Video Gallery Section on Light Limestone Background ── */
 
-function HeroVideo() {
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const borderRadius = useTransform(
-    scrollYProgress,
-    [0, 0.3],
-    ["0px", "0px"],
-  );
-  const scale = useTransform(scrollYProgress, [0.1, 0.5], [0.96, 1]);
-
+function VideoGallerySection() {
   return (
-    <section
-      ref={ref}
-      aria-labelledby="hero-video-h"
-      className="bg-charcoal"
-    >
-      <div className="container-x py-12 sm:py-16 lg:py-20">
-        {/* Label */}
-        <div className="mb-10 flex flex-col items-center text-center text-limestone">
+    <section aria-labelledby="gallery-heading" className="bg-limestone py-16 sm:py-24 lg:py-28">
+      <div className="container-x">
+        {/* ── Common Section Header (No "Featured Video" Heading) ── */}
+        <div className="mb-12 sm:mb-16 lg:mb-20 max-w-3xl">
           <motion.div
-            initial={{ width: 0 }}
-            whileInView={{ width: 48 }}
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="mb-6 h-px bg-terracotta"
-          />
+            transition={{ duration: 0.6 }}
+            className="flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-terracotta"
+          >
+            <span aria-hidden className="inline-block h-px w-5 bg-terracotta" />
+            <span>Curated Films & Walkthroughs</span>
+          </motion.div>
+
+          <motion.h2
+            id="gallery-heading"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="mt-4 font-display text-[clamp(2rem,4.5vw,3.5rem)] leading-[1.08] tracking-tight text-charcoal font-light"
+          >
+            Discover our developments in motion.
+          </motion.h2>
+
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.15 }}
-            className="flex items-center gap-3 text-[0.85rem] font-medium uppercase tracking-[0.14em] text-terracotta"
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="mt-4 text-base sm:text-lg text-charcoal/75 leading-relaxed"
           >
-            <Play className="h-3.5 w-3.5" strokeWidth={2} />
-            Featured Video
+            Watch real site footage, landscape fly-throughs, and community highlights from
+            our prime projects across Bengaluru, Mysuru, Gadag, and Gundlupet.
           </motion.p>
-          <h2
-            id="hero-video-h"
-            className="text-h2 mt-5 max-w-[20ch] text-limestone"
-          >
-            <RiseText>{heroVideo.title}</RiseText>
-          </h2>
         </div>
 
-        {/* Video embed — full-width, cinema aspect ratio */}
+        {/* ── Top Main Showcase Video ─────────────────────────── */}
         <motion.div
-          style={{ scale, borderRadius }}
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="relative mx-auto w-full overflow-hidden"
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="relative mx-auto w-full max-w-5xl overflow-hidden rounded-xl sm:rounded-2xl bg-charcoal shadow-2xl shadow-charcoal/15 ring-1 ring-charcoal/10"
         >
-          {/* Decorative frame corners */}
-          <FrameCorners />
-
+          {/* Main 16:9 Video Embed */}
           <div className="relative aspect-video w-full overflow-hidden bg-charcoal">
             <iframe
-              src={`https://www.youtube.com/embed/${heroVideo.id}?rel=0&modestbranding=1&color=white`}
-              title={heroVideo.title}
+              src={`https://www.youtube.com/embed/${mainVideo.id}?rel=0&modestbranding=1&color=white`}
+              title={mainVideo.title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
               loading="eager"
-              className="absolute inset-0 h-full w-full"
+              className="absolute inset-0 h-full w-full border-0"
             />
           </div>
+
+          {/* Elegant Architectural Caption Strip Below Video */}
+          <div className="border-t border-limestone/10 bg-charcoal px-6 py-5 sm:px-8 sm:py-6 text-limestone flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <span className="inline-block rounded-full bg-terracotta/20 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-terracotta">
+                {mainVideo.badge}
+              </span>
+              <h3 className="mt-2 font-display text-lg sm:text-xl md:text-2xl text-limestone font-light leading-snug">
+                {mainVideo.title}
+              </h3>
+              <p className="mt-1.5 max-w-2xl text-xs sm:text-sm text-limestone/70 leading-relaxed">
+                {mainVideo.subtitle}
+              </p>
+            </div>
+          </div>
         </motion.div>
-      </div>
-    </section>
-  );
-}
 
-/* ── S2 — Three secondary videos ──────────────────────────────── */
+        {/* ── Aesthetic Architectural Divider ─────────────────── */}
+        <div className="my-16 sm:my-20 lg:my-24 flex items-center justify-center gap-4">
+          <span className="h-px w-24 sm:w-40 bg-charcoal/15" />
+          <span className="h-1.5 w-1.5 rounded-full bg-terracotta" />
+          <span className="text-[11px] font-medium tracking-[0.24em] uppercase text-charcoal/50">
+            More Project Stories
+          </span>
+          <span className="h-1.5 w-1.5 rounded-full bg-terracotta" />
+          <span className="h-px w-24 sm:w-40 bg-charcoal/15" />
+        </div>
 
-function SecondaryVideos() {
-  return (
-    <section
-      aria-labelledby="more-videos-h"
-      className="section-y bg-limestone"
-    >
-      <div className="container-x">
-        <SectionHead
-          id="more-videos-h"
-          eyebrow="More Videos"
-          title="Explore Our Journey"
-        >
-          <p className="measure mt-6 text-charcoal/75">
-            Dive deeper into our projects, community living, and the legacy
-            that defines Royal Infra Realty.
-          </p>
-        </SectionHead>
-
-        <div className="mt-16 grid gap-8 md:grid-cols-3 md:gap-6 lg:gap-10">
-          {secondaryVideos.map((video, i) => (
-            <VideoCard key={video.id} video={video} index={i} />
+        {/* ── Below: 3 Complementary Videos in a Creative Grid ── */}
+        <div className="grid gap-8 md:grid-cols-3 md:gap-6 lg:gap-8">
+          {galleryVideos.map((video, idx) => (
+            <VideoCard key={video.id} video={video} index={idx} />
           ))}
         </div>
       </div>
@@ -181,13 +180,13 @@ function SecondaryVideos() {
   );
 }
 
-/* ── Video card ───────────────────────────────────────────────── */
+/* ── Secondary Video Card ─────────────────────────────────────── */
 
 function VideoCard({
   video,
   index,
 }: {
-  video: (typeof secondaryVideos)[number];
+  video: (typeof galleryVideos)[number];
   index: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -195,124 +194,57 @@ function VideoCard({
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 50 }}
+      initial={{ opacity: 0, y: 36 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.15 }}
       transition={{
-        duration: 0.8,
-        delay: index * 0.15,
+        duration: 0.75,
+        delay: index * 0.12,
         ease: [0.22, 1, 0.36, 1],
       }}
-      className="group"
+      className="group flex flex-col justify-between overflow-hidden rounded-xl bg-limestone border border-charcoal/15 p-4 sm:p-5 shadow-sm transition-all duration-300 hover:border-charcoal/30 hover:shadow-lg hover:shadow-charcoal/5"
     >
-      {/* Video frame */}
-      <div className="relative overflow-hidden rounded-sm">
-        {/* Curtain wipe overlay */}
-        <motion.div
-          aria-hidden
-          className="absolute inset-0 z-10 origin-top bg-rosewood"
-          initial={{ scaleY: 1 }}
-          whileInView={{ scaleY: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{
-            duration: 0.9,
-            delay: index * 0.12,
-            ease: [0.65, 0, 0.35, 1],
-          }}
-        />
+      <div>
+        {/* Top Tag & Numbering */}
+        <div className="mb-3.5 flex items-center justify-between text-xs">
+          <span className="font-display font-light text-terracotta text-sm">
+            {video.num}
+          </span>
+          <span className="rounded-full bg-charcoal/5 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-charcoal/60">
+            {video.tag}
+          </span>
+        </div>
 
-        <div className="relative aspect-video w-full overflow-hidden bg-charcoal">
+        {/* Video Embed Frame */}
+        <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-charcoal shadow-inner ring-1 ring-charcoal/10">
           <iframe
             src={`https://www.youtube.com/embed/${video.id}?rel=0&modestbranding=1&color=white`}
             title={video.title}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
             loading="lazy"
-            className="absolute inset-0 h-full w-full"
+            className="absolute inset-0 h-full w-full border-0"
           />
+        </div>
+
+        {/* Title and Subtitle */}
+        <div className="mt-4">
+          <h3 className="font-display text-lg sm:text-xl font-normal leading-snug tracking-tight text-charcoal group-hover:text-terracotta transition-colors duration-200">
+            {video.title}
+          </h3>
+          <p className="mt-1.5 text-xs sm:text-[0.875rem] text-charcoal/70 leading-relaxed">
+            {video.subtitle}
+          </p>
         </div>
       </div>
 
-      {/* Meta */}
-      <div className="mt-5">
-        <motion.span
-          aria-hidden
-          className="mb-2 block font-display text-sm text-terracotta"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 + index * 0.12, duration: 0.5 }}
-        >
-          0{index + 1}
-        </motion.span>
-        <h3 className="font-display text-[clamp(1.25rem,1.8vw,1.5rem)] leading-snug tracking-tight">
-          {video.title}
-        </h3>
-        <p className="mt-2 text-[0.95rem] text-charcoal/65">
-          {video.subtitle}
-        </p>
-
-        {/* Animated underline */}
-        <motion.div
-          className="mt-4 h-px bg-charcoal/15"
-          initial={{ scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          viewport={{ once: true }}
-          transition={{
-            duration: 0.7,
-            delay: 0.4 + index * 0.12,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-          style={{ originX: 0 }}
-        />
+      {/* Terracotta Bottom Accent Line */}
+      <div className="mt-5 pt-3 border-t border-charcoal/10 flex items-center justify-between text-[11px] text-charcoal/50 font-mono">
+        <span>Royal Infra Series</span>
+        <span className="text-terracotta transition-transform duration-300 group-hover:translate-x-1">
+          ▶ Watch
+        </span>
       </div>
     </motion.div>
-  );
-}
-
-/* ── Decorative frame corners ─────────────────────────────────── */
-
-function FrameCorners() {
-  const size = "h-6 w-6 sm:h-8 sm:w-8";
-  const stroke = "stroke-terracotta/50";
-  return (
-    <>
-      {/* Top-left */}
-      <svg
-        aria-hidden
-        viewBox="0 0 32 32"
-        fill="none"
-        className={cn("absolute left-3 top-3 z-10", size)}
-      >
-        <path d="M0 16V2a2 2 0 0 1 2-2h14" className={stroke} strokeWidth="1.5" />
-      </svg>
-      {/* Top-right */}
-      <svg
-        aria-hidden
-        viewBox="0 0 32 32"
-        fill="none"
-        className={cn("absolute right-3 top-3 z-10", size)}
-      >
-        <path d="M32 16V2a2 2 0 0 0-2-2H16" className={stroke} strokeWidth="1.5" />
-      </svg>
-      {/* Bottom-left */}
-      <svg
-        aria-hidden
-        viewBox="0 0 32 32"
-        fill="none"
-        className={cn("absolute bottom-3 left-3 z-10", size)}
-      >
-        <path d="M0 16v14a2 2 0 0 0 2 2h14" className={stroke} strokeWidth="1.5" />
-      </svg>
-      {/* Bottom-right */}
-      <svg
-        aria-hidden
-        viewBox="0 0 32 32"
-        fill="none"
-        className={cn("absolute bottom-3 right-3 z-10", size)}
-      >
-        <path d="M32 16v14a2 2 0 0 1-2 2H16" className={stroke} strokeWidth="1.5" />
-      </svg>
-    </>
   );
 }

@@ -2,11 +2,63 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { EnquiryForm } from "@/components/pages/EnquiryForm";
-import { Logo } from "@/components/ui-brand";
 
 import { shouldShowEntranceFlow } from "@/lib/entrance";
 
 const DELAY_MS = 2400;
+
+/* ─────────────────────────────────────────────────────────────
+   Motion variants
+   ───────────────────────────────────────────────────────────── */
+const backdropVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.45, ease: "easeOut" } },
+  exit: { opacity: 0, transition: { duration: 0.25, ease: "easeIn" } },
+};
+
+const dialogVariants = {
+  hidden: { opacity: 0, scale: 0.94, y: 28, filter: "blur(6px)" },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.55,
+      ease: [0.22, 1, 0.36, 1] as const,
+      staggerChildren: 0.09,
+      delayChildren: 0.18,
+    },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.96,
+    y: 18,
+    filter: "blur(4px)",
+    transition: { duration: 0.25, ease: [0.4, 0, 1, 1] as const },
+  },
+};
+
+const childVariants = {
+  hidden: { opacity: 0, y: 14 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
+
+const hairlineVariants = {
+  hidden: { scaleX: 0, originX: 0 },
+  visible: {
+    scaleX: 1,
+    transition: {
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1] as const,
+      delay: 0.15,
+    },
+  },
+};
 
 /**
  * Site-wide enquiry popup that appears on fresh visit and on page refresh.
@@ -33,8 +85,8 @@ export function SiteEnquiryPopup() {
     const prevOverflow = document.body.style.overflow;
     const prevPaddingRight = document.body.style.paddingRight;
 
-    // Compensate for scrollbar shift on desktop
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
     if (scrollbarWidth > 0) {
       document.body.style.paddingRight = `${scrollbarWidth}px`;
     }
@@ -58,13 +110,12 @@ export function SiteEnquiryPopup() {
   return (
     <AnimatePresence>
       {open && (
-        /* Fullscreen backdrop with built-in scroll buffer */
         <motion.div
           key="enquiry-backdrop"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.35 }}
+          variants={backdropVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
           onClick={close}
           className="fixed inset-0 z-[95] overflow-y-auto overscroll-contain bg-charcoal/80 backdrop-blur-sm p-3 sm:p-5 md:p-6 flex items-center justify-center min-h-screen"
         >
@@ -76,41 +127,68 @@ export function SiteEnquiryPopup() {
             aria-labelledby="site-enquiry-title"
             aria-describedby="site-enquiry-desc"
             onClick={(e) => e.stopPropagation()}
-            initial={{ opacity: 0, scale: 0.94, y: 24 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.94, y: 16 }}
-            transition={{
-              duration: 0.45,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="relative w-full max-w-xl my-auto bg-limestone text-charcoal shadow-2xl shadow-charcoal/50 border border-charcoal/10 flex flex-col max-h-[calc(100dvh-1.5rem)] sm:max-h-[calc(100dvh-3rem)] overflow-hidden"
+            variants={dialogVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="relative w-full max-w-xl my-auto bg-limestone text-charcoal flex flex-col max-h-[calc(100dvh-1.5rem)] sm:max-h-[calc(100dvh-3rem)] overflow-hidden rounded-2xl sm:rounded-3xl ring-1 ring-charcoal/10 shadow-2xl shadow-charcoal/50"
           >
-            {/* ── Compact Architectural Header ────────────────── */}
-            <div className="relative shrink-0 overflow-hidden bg-charcoal px-5 py-5 sm:px-8 sm:py-6 text-limestone">
-              {/* Subtle Architectural Arch Silhouette Watermark */}
+            {/* ══ Compact Architectural Header ══════════════════ */}
+            <motion.div
+              variants={childVariants}
+              className="relative shrink-0 overflow-hidden px-5 py-5 sm:px-8 sm:py-7 text-limestone"
+            >
+              {/* Background image */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute -right-10 -top-8 h-48 w-36 rounded-[999px_999px_0_0] border border-limestone/[0.08]"
+                className="absolute inset-0 bg-cover bg-center"
+                style={{
+                  backgroundImage:
+                    "url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80')",
+                }}
+              />
+              {/* Legibility gradient (dark → transparent left-to-right) */}
+              <div
+                aria-hidden
+                className="absolute inset-0 bg-gradient-to-r from-charcoal via-charcoal/85 to-charcoal/40"
+              />
+              {/* Bottom fade into limestone */}
+              <div
+                aria-hidden
+                className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-b from-transparent to-charcoal/60"
+              />
+
+              {/* Architectural Arch Watermarks */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -right-10 -top-8 h-48 w-36 rounded-[999px_999px_0_0] border border-limestone/[0.10]"
               />
               <div
                 aria-hidden
-                className="pointer-events-none absolute -right-3 top-0 h-36 w-24 rounded-[999px_999px_0_0] border border-terracotta/[0.12]"
+                className="pointer-events-none absolute -right-3 top-0 h-36 w-24 rounded-[999px_999px_0_0] border border-terracotta/[0.18]"
               />
 
               {/* Dismiss Button */}
-              <button
+              <motion.button
                 type="button"
                 onClick={close}
                 aria-label="Close enquiry form"
-                className="absolute right-4 top-4 z-20 inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-limestone/25 text-limestone transition-colors duration-200 hover:bg-limestone hover:text-charcoal focus-visible:ring-2 focus-visible:ring-terracotta"
+                whileHover={{ rotate: 90 }}
+                whileTap={{ scale: 0.92 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                className="absolute right-4 top-4 z-20 inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-limestone/25 text-limestone backdrop-blur-sm bg-charcoal/20 transition-colors duration-200 hover:bg-limestone hover:text-charcoal focus-visible:ring-2 focus-visible:ring-terracotta outline-none"
               >
-                <X className="h-4 w-4 sm:h-[18px] sm:w-[18px]" strokeWidth={1.8} aria-hidden />
-              </button>
+                <X
+                  className="h-4 w-4 sm:h-[18px] sm:w-[18px]"
+                  strokeWidth={1.8}
+                  aria-hidden
+                />
+              </motion.button>
 
               {/* Title */}
               <h2
                 id="site-enquiry-title"
-                className="mt-1.5 font-display text-2xl sm:text-3xl leading-tight text-limestone font-light"
+                className="relative mt-1.5 font-display text-2xl sm:text-3xl leading-tight text-limestone font-light tracking-tight"
               >
                 Let’s find your place.
               </h2>
@@ -118,26 +196,31 @@ export function SiteEnquiryPopup() {
               {/* Description */}
               <p
                 id="site-enquiry-desc"
-                className="mt-1 max-w-md text-xs sm:text-sm leading-relaxed text-limestone/75"
+                className="relative mt-1.5 max-w-md text-xs sm:text-sm leading-relaxed text-limestone/80"
               >
-                Tell us what you are looking for and our senior property advisors will connect with you.
+                Tell us what you are looking for and our senior property
+                advisors will connect with you.
               </p>
-            </div>
+            </motion.div>
 
-            {/* ── Scrollable Form Body ────────────────────────── */}
-            <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-8 sm:py-6">
+            {/* ══ Scrollable Form Body ══════════════════════════ */}
+            <motion.div
+              variants={childVariants}
+              className="flex-1 overflow-y-auto overscroll-contain px-5 py-6 sm:px-8 sm:py-7"
+            >
               <EnquiryForm
                 compact
                 onSuccess={() => {
                   setTimeout(() => setOpen(false), 4000);
                 }}
               />
-            </div>
+            </motion.div>
 
-            {/* ── Terracotta Foundation Hairline ───────────────── */}
-            <div
+            {/* ══ Terracotta Foundation Hairline (animated) ══════ */}
+            <motion.div
               aria-hidden
-              className="h-[3px] w-full shrink-0 bg-terracotta"
+              variants={hairlineVariants}
+              className="h-[3px] w-full shrink-0 bg-gradient-to-r from-terracotta via-terracotta to-terracotta/60"
             />
           </motion.div>
         </motion.div>

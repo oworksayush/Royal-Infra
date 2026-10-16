@@ -12,6 +12,7 @@ import locGadag from "@/assets/loc-gadag.jpg";
 import pool from "@/assets/life-pool-dusk.jpg";
 import sabil from "@/assets/director-sabil-umachagi.jpeg";
 import vivek from "@/assets/director-vivekanand-maroor.jpeg";
+import logoImg from "@/assets/Royal_Infra_Logo.png";
 
 export type ImageEntry = {
   id: string;
@@ -24,6 +25,14 @@ export type ImageEntry = {
 };
 
 export const images = {
+  logo: {
+    id: "royal-infra-logo",
+    src: logoImg,
+    alt: "Royal Infra Realty",
+    width: 600,
+    height: 300,
+    kind: "original" as const,
+  },
   hero: {
     id: "hero-arch-portrait",
     src: heroArch,

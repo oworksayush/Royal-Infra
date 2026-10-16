@@ -1,5 +1,6 @@
 import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import logoImg from "@/assets/Royal_Infra_Logo.png";
 
 type Tone = "dark" | "light"; // dark = on light section (charcoal fill), light = on dark section
 
@@ -61,15 +62,33 @@ export function TextLink({ className, children, ...props }: ComponentProps<"a"> 
   );
 }
 
-/** Wordmark stand-in until the original logo file is uploaded. */
-export function Logo({ className }: { className?: string }) {
+/** Official Royal Infra company logo from assets */
+export function Logo({
+  className,
+  imgClassName,
+  tone = "light",
+  alt = "Royal Infra Realty",
+}: {
+  className?: string;
+  imgClassName?: string;
+  tone?: "light" | "dark" | "original";
+  alt?: string;
+}) {
   return (
-    <span className={cn("inline-flex items-center gap-2.5", className)} aria-label="Royal Infra Realty logo" role="img">
-      <svg viewBox="0 0 24 28" className="h-7 w-6" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
-        <path d="M2 27V12a10 10 0 0 1 20 0v15" />
-        <path d="M7 27V14a5 5 0 0 1 10 0v13" />
-      </svg>
-      <span className="font-display text-xl leading-none tracking-tight">Royal Infra</span>
+    <span
+      className={cn("inline-flex items-center shrink-0", className)}
+      aria-label={alt}
+    >
+      <img
+        src={logoImg}
+        alt={alt}
+        className={cn(
+          "h-10 sm:h-11 w-auto max-w-[170px] sm:max-w-[200px] object-contain transition-all duration-200",
+          // Apply no filter for original logo; avoid brightening/inverting which creates white box.
+          tone === "original" && "",
+          imgClassName
+        )}
+      />
     </span>
   );
 }

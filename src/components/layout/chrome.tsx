@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { Mail, MessageCircle, Phone, Menu, X } from "lucide-react";
+import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
 import { nav, quickLinks, site } from "@/data/site";
 import { homeProjects } from "@/data/home";
 import { ButtonLink, Logo } from "@/components/ui-brand";
@@ -47,16 +47,19 @@ const LIGHT_TOP = ["/contact-us", "/privacy-policy", "/terms-of-use"];
 
 export function Header() {
   const { scrollY } = useScroll();
-  const [hidden, setHidden] = useState(false);
-  const [solid, setSolid] = useState(false);
+  const [condensed, setCondensed] = useState(false);
   const [open, setOpen] = useState(false);
   const [mega, setMega] = useState(false);
-  const last = useRef(0);
+
   useMotionValueEvent(scrollY, "change", (y) => {
-    setHidden(y > last.current && y > 200);
-    setSolid(y > 80);
-    last.current = y;
+    setCondensed(y > 40);
   });
+
+  const forceSolid =
+    typeof window !== "undefined" &&
+    LIGHT_TOP.some((p) => window.location.pathname.startsWith(p));
+  const isSolid = condensed || forceSolid;
+
   return (
     <>
       <a
@@ -65,19 +68,66 @@ export function Header() {
       >
         Skip to content
       </a>
+
       <motion.header
-        animate={{ y: hidden && !open ? "-100%" : 0 }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className={cn(
-          "fixed inset-x-0 top-0 z-50 text-limestone transition-colors duration-300",
-          (solid || LIGHT_TOP.some((p) => window.location.pathname.startsWith(p))) && "bg-charcoal",
-        )}
+        initial={false}
+        animate={{
+          paddingTop: condensed ? 8 : 0,
+          paddingBottom: condensed ? 8 : 0,
+        }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="fixed inset-x-0 top-0 z-50 text-limestone"
       >
-        <div className="container-x flex h-20 items-center justify-between">
-          <a href="/" aria-label="Royal Infra Realty home">
-            <Logo />
-          </a>
-          <nav aria-label="Main" className="hidden items-center gap-9 lg:flex">
+        {/* Ambient background layer — fades in when condensed */}
+        <motion.div
+          aria-hidden
+          initial={false}
+          animate={{ opacity: isSolid ? 1 : 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="pointer-events-none absolute inset-0 bg-charcoal/80 backdrop-blur-xl supports-[backdrop-filter]:bg-charcoal/65"
+        />
+
+        {/* Bottom hairline — gradient fade */}
+        <motion.div
+          aria-hidden
+          initial={false}
+          animate={{ opacity: isSolid ? 1 : 0 }}
+          transition={{ duration: 0.5 }}
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-limestone/20 to-transparent"
+        />
+
+        {/* Top gradient at rest (over hero) — soft veil */}
+        <motion.div
+          aria-hidden
+          initial={false}
+          animate={{ opacity: isSolid ? 0 : 1 }}
+          transition={{ duration: 0.5 }}
+          className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-charcoal/50 to-transparent"
+        />
+
+        <div
+          className={cn(
+            "container-x relative flex items-center justify-between transition-[height] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+            condensed ? "h-16" : "h-20",
+          )}
+        >
+          <motion.a
+            href="/"
+            aria-label="Royal Infra Realty home"
+            whileHover={{ scale: 1.03 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="relative z-10"
+          >
+            <motion.div
+              animate={{ scale: condensed ? 0.92 : 1 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              style={{ transformOrigin: "left center" }}
+            >
+              <Logo />
+            </motion.div>
+          </motion.a>
+
+          <nav aria-label="Main" className="hidden items-center gap-8 lg:flex">
             {nav.map((n) =>
               n.to === "/projects" ? (
                 <div
@@ -88,33 +138,81 @@ export function Header() {
                   onFocus={() => setMega(true)}
                   onBlur={() => setMega(false)}
                 >
-                  <a href={n.to} className="py-6 text-[0.95rem]">
-                    {n.label}
+                  <a
+                    href={n.to}
+                    className="group flex items-center gap-1.5 py-4 text-[0.95rem] tracking-wide text-limestone/90 transition-colors hover:text-limestone"
+                  >
+                    <span className="relative">
+                      {n.label}
+                      <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-terracotta transition-transform duration-500 ease-out group-hover:scale-x-100" />
+                    </span>
+                    <ChevronDown
+                      className={cn(
+                        "h-3.5 w-3.5 transition-transform duration-500 ease-out",
+                        mega && "rotate-180",
+                      )}
+                      strokeWidth={1.75}
+                    />
                   </a>
+
                   <AnimatePresence>
                     {mega && (
                       <motion.div
-                        initial={{ opacity: 0, y: 8 }}
+                        initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 8 }}
-                        className="absolute left-1/2 top-full grid w-[640px] -translate-x-1/2 grid-cols-3 gap-5 bg-charcoal p-6"
+                        exit={{ opacity: 0, y: 12 }}
+                        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                        className="absolute left-1/2 top-full w-[640px] -translate-x-1/2 pt-3"
                       >
-                        {homeProjects.map((p) => (
-                          <a key={p.slug} href={`/projects/${p.slug}`} className="group block">
-                            <div className="arch aspect-[4/5] overflow-hidden">
-                              <img
-                                src={p.image.src}
-                                alt=""
-                                width={p.image.width}
-                                height={p.image.height}
-                                loading="lazy"
-                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        <div className="overflow-hidden rounded-2xl border border-limestone/10 bg-charcoal/95 shadow-2xl shadow-charcoal/50 backdrop-blur-xl">
+                          <div className="grid grid-cols-3 gap-4 p-5">
+                            {homeProjects.map((p, i) => (
+                              <motion.a
+                                key={p.slug}
+                                href={`/projects/${p.slug}`}
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{
+                                  delay: 0.05 + i * 0.06,
+                                  duration: 0.4,
+                                  ease: [0.22, 1, 0.36, 1],
+                                }}
+                                className="group block"
+                              >
+                                <div className="aspect-[4/3] overflow-hidden rounded-xl bg-limestone/5">
+                                  <img
+                                    src={p.image.src}
+                                    alt=""
+                                    width={p.image.width}
+                                    height={p.image.height}
+                                    loading="lazy"
+                                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                                  />
+                                </div>
+                                <p className="mt-3 font-display text-[0.95rem] leading-tight transition-colors group-hover:text-terracotta">
+                                  {p.name}
+                                </p>
+                                <p className="mt-0.5 text-xs text-limestone/60">{p.location}</p>
+                              </motion.a>
+                            ))}
+                          </div>
+
+                          <div className="flex items-center justify-between border-t border-limestone/10 px-5 py-3.5">
+                            <p className="text-xs text-limestone/55">
+                              Explore premium plots across Karnataka
+                            </p>
+                            <a
+                              href="/projects"
+                              className="group inline-flex items-center gap-1.5 text-xs font-medium text-terracotta transition-colors hover:text-limestone"
+                            >
+                              View all projects
+                              <ArrowRight
+                                className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1"
+                                strokeWidth={2}
                               />
-                            </div>
-                            <p className="mt-3 font-display text-lg">{p.name}</p>
-                            <p className="text-sm text-limestone/70">{p.location}</p>
-                          </a>
-                        ))}
+                            </a>
+                          </div>
+                        </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -124,19 +222,30 @@ export function Header() {
                   key={n.to}
                   href={n.to}
                   className={cn(
-                    "text-[0.95rem]",
-                    window.location.pathname === n.to && "text-terracotta",
+                    "group relative py-4 text-[0.95rem] tracking-wide transition-colors hover:text-limestone",
+                    typeof window !== "undefined" && window.location.pathname === n.to
+                      ? "text-terracotta"
+                      : "text-limestone/90",
                   )}
                 >
-                  {n.label}
+                  <span className="relative">
+                    {n.label}
+                    <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-terracotta transition-transform duration-500 ease-out group-hover:scale-x-100" />
+                  </span>
                 </a>
               ),
             )}
           </nav>
-          <div className="flex items-center gap-3">
-            <ButtonLink href="/contact-us" tone="light" className="hidden sm:inline-flex">
-              Book a Site Visit
-            </ButtonLink>
+
+          <div className="relative z-10 flex items-center gap-3">
+            <motion.div
+              animate={{ scale: condensed ? 0.94 : 1 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <ButtonLink href="/contact-us" tone="light" className="hidden sm:inline-flex">
+                Book a Site Visit
+              </ButtonLink>
+            </motion.div>
             <button
               onClick={() => setOpen(true)}
               aria-label="Open menu"
@@ -147,6 +256,7 @@ export function Header() {
           </div>
         </div>
       </motion.header>
+
       <AnimatePresence>
         {open && (
           <motion.div
@@ -157,9 +267,9 @@ export function Header() {
             animate={{ clipPath: "inset(0 0 0% 0)" }}
             exit={{ clipPath: "inset(0 0 100% 0)" }}
             transition={{ duration: 0.7, ease: [0.65, 0, 0.35, 1] }}
-            className="fixed inset-0 z-[80] flex flex-col bg-rosewood text-limestone"
+            className="fixed inset-0 z-[80] flex flex-col overflow-y-auto bg-rosewood text-limestone"
           >
-            <div className="container-x flex h-20 items-center justify-between">
+            <div className="container-x flex h-20 shrink-0 items-center justify-between">
               <Logo />
               <button
                 onClick={() => setOpen(false)}
@@ -169,6 +279,7 @@ export function Header() {
                 <X strokeWidth={1.25} />
               </button>
             </div>
+
             <nav aria-label="Mobile" className="container-x mt-8 flex flex-col gap-2">
               {nav.map((n, i) => (
                 <motion.div
@@ -177,13 +288,18 @@ export function Header() {
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.25 + i * 0.07 }}
                 >
-                  <a href={n.to} onClick={() => setOpen(false)} className="font-display text-5xl">
+                  <a
+                    href={n.to}
+                    onClick={() => setOpen(false)}
+                    className="font-display text-4xl sm:text-5xl"
+                  >
                     {n.label}
                   </a>
                 </motion.div>
               ))}
             </nav>
-            <div className="container-x mt-auto grid grid-cols-3 gap-3 pb-10">
+
+            <div className="container-x mt-auto grid grid-cols-3 gap-3 pb-10 pt-10">
               {homeProjects.map((p) => (
                 <a key={p.slug} href={`/projects/${p.slug}`} onClick={() => setOpen(false)}>
                   <img
@@ -191,7 +307,7 @@ export function Header() {
                     alt=""
                     width={p.image.width}
                     height={p.image.height}
-                    className="arch aspect-[4/5] w-full object-cover"
+                    className="aspect-[4/5] w-full rounded-2xl object-cover"
                   />
                   <span className="mt-2 block text-sm">{p.name}</span>
                 </a>
@@ -224,7 +340,7 @@ export function Footer({ onHeight }: { onHeight: (h: number) => void }) {
       <div className="container-x pb-20 pt-20 sm:pb-10 sm:pt-24">
         <div className="grid grid-cols-2 gap-x-8 gap-y-12 border-b border-limestone/15 pb-14 sm:gap-y-14 md:grid-cols-12 md:gap-x-6 lg:gap-x-10">
           <div className="col-span-2 md:col-span-4">
-            <Logo />
+            <Logo imgClassName="h-12 sm:h-14 max-w-[210px]" />
             <p className="mt-6 max-w-xs text-[0.95rem] leading-relaxed text-limestone/70">
               {site.footerText}
             </p>
@@ -286,7 +402,7 @@ export function Footer({ onHeight }: { onHeight: (h: number) => void }) {
         </div>
         <p
           aria-hidden
-          className="mt-14 flex overflow-hidden font-display text-[clamp(3rem,10.4vw,10rem)] leading-[1.2] tracking-[-0.045em] sm:mt-16"
+          className="mt-14 flex overflow-hidden font-display text-[clamp(6rem,10.4vw,3rem)] leading-[1.2] tracking-[-0.045em] sm:mt-16"
         >
           {letters.map((l, i) => (
             <motion.span

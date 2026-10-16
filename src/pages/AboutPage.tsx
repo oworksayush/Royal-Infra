@@ -89,24 +89,25 @@ function Values() {
 }
 
 function Leaders() {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const up = useTransform(scrollYProgress, [0, 1], [40, -40]);
-  const down = useTransform(scrollYProgress, [0, 1], [-20, 60]);
   return (
     <section aria-labelledby="leaders-h" className="section-y bg-limestone">
       <div className="container-x">
         <SectionHead id="leaders-h" eyebrow={about.leadersEyebrow} title={about.leadersTitle}>
           <p className="measure mt-6">{about.leadersSub}</p>
         </SectionHead>
-        <div ref={ref} className="mt-20 grid gap-16 md:grid-cols-2 md:gap-10">
-          {about.leaders.map((l, i) => (
-            <motion.article key={l.name} style={{ y: i === 0 ? up : down }} className={cn(i === 1 && "md:mt-32")}>
-              <CurtainImage image={l.image} className="aspect-square w-full max-w-md rounded-full" curtain="bg-olive" />
+
+        <div className="mt-20 grid gap-14 sm:gap-16 md:grid-cols-2 md:gap-10 lg:gap-16">
+          {about.leaders.map((l) => (
+            <article key={l.name} className="flex flex-col items-start">
+              <CurtainImage
+                image={l.image}
+                className="aspect-square w-full max-w-md rounded-full"
+                curtain="bg-olive"
+              />
               <h3 className="text-h3 mt-8">{l.name}</h3>
               <p className="text-sm text-charcoal/75">{l.role}</p>
               <p className="measure mt-5">{l.bio}</p>
-            </motion.article>
+            </article>
           ))}
         </div>
       </div>

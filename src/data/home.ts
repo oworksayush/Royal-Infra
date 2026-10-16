@@ -43,7 +43,7 @@ export const pillars = [
   { title: "End-to-End Support", text: "Comprehensive assistance from initial consultation to legal registration and documentation handover.", bg: "bg-charcoal", icon: "hands" },
 ] as const;
 
-export const servicesIntro = { eyebrow: "Our Services", title: "Comprehensive Real Estate Solutions" };
+export const servicesIntro = { eyebrow: "What We Do", title: "Comprehensive Real Estate Solutions" };
 export const services = [
   { title: "Plotted Developments", text: "Premium residential plots designed with infrastructure and modern amenities to build your dream home.", image: images.svcPlots },
   { title: "Residential Apartments", text: "Luxurious living spaces in prime locations crafted for contemporary lifestyles and comfort.", image: images.svcApts },

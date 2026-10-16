@@ -26,64 +26,92 @@ export function Hero() {
   const pinned = usePinnedMotion();
   return <HeroInner key={String(pinned)} pinned={pinned} />;
 }
+
 function HeroInner({ pinned }: { pinned: boolean }) {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+
   const clip = useTransform(
     scrollYProgress,
     [0, 0.85],
     ["inset(10% 6% 10% 52% round 999px 999px 0px 0px)", "inset(0% 0% 0% 0% round 0px 0px 0px 0px)"],
   );
   const scale = useTransform(scrollYProgress, [0, 1], [1.25, 1]);
-  const textX = useTransform(scrollYProgress, [0, 0.7], ["0%", "-12%"]);
-  const textOpacity = useTransform(scrollYProgress, [0.35, 0.75], [1, 0]);
+  const textX = useTransform(scrollYProgress, [0, 0.7], ["0%", "-6%"]);
+  const textOpacity = useTransform(scrollYProgress, [0.4, 0.78], [1, 0]);
   const overlay = useTransform(scrollYProgress, [0, 0.6], [0, 0.45]);
 
   const copy = (
-    <div className="relative z-10">
+    <div className="relative z-10 w-full">
+      <p className="max-w-[42ch] font-sans text-xs font-medium leading-relaxed tracking-normal text-limestone/80 sm:text-sm lg:text-base">
+        {hero.kicker}
+      </p>
 
-      <h1 className="mt-8">
-        <span className="block max-w-xl font-sans text-base font-medium leading-snug tracking-normal text-limestone/80">{hero.kicker}</span>
-        <span className="mt-6 block max-w-[12ch] font-display text-[clamp(2.75rem,5.4vw,6.25rem)] font-[330] leading-[0.98] tracking-[-0.025em]">
-          <RiseText>{hero.title}</RiseText>
-        </span>
+      <h1 className="mt-4 max-w-[16ch] font-display text-[clamp(2.25rem,5.2vw,5.5rem)] font-[330] leading-[1.02] tracking-[-0.025em] sm:mt-5 lg:mt-6">
+        <RiseText>{hero.title}</RiseText>
       </h1>
-      <p className="mt-8 max-w-md text-lg text-limestone/85">{hero.body}</p>
-      <div className="mt-10 flex flex-wrap gap-3">
-        <ButtonLink href="/projects" tone="light">Explore Projects</ButtonLink>
-        <a href="/contact-us" className="inline-flex min-h-11 items-center rounded-full border border-limestone/40 px-7 py-3 font-medium transition-colors hover:bg-limestone hover:text-charcoal">
+
+      <p className="mt-4 max-w-[46ch] text-sm leading-relaxed text-limestone/85 sm:mt-5 sm:text-base lg:mt-6 lg:text-lg">
+        {hero.body}
+      </p>
+
+      <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
+        <ButtonLink href="/projects" tone="light">
+          Explore Projects
+        </ButtonLink>
+        <a
+          href="/contact-us"
+          className="inline-flex min-h-11 items-center rounded-full border border-limestone/40 px-6 py-3 text-sm font-medium transition-colors hover:bg-limestone hover:text-charcoal sm:px-7 sm:text-base"
+        >
           Book a Site Visit
         </a>
       </div>
     </div>
   );
 
+  /* No top border, no full-width stretch — sits on the left, grouped tightly */
   const statStrip = (
-    <dl className="grid grid-cols-3 gap-6 border-t border-limestone/20 pt-6">
+    <dl className="grid w-fit grid-cols-3 gap-x-8 sm:gap-x-12 lg:gap-x-16">
       {stats.map((s) => (
-        <div key={s.label}>
-          <dt className="text-sm text-limestone/70" style={{ fontVariantCaps: "all-small-caps" }}>{s.label}</dt>
-          <dd className="font-display text-4xl text-terracotta lg:text-5xl"><CountUp value={s.value} suffix={s.suffix} /></dd>
+        <div key={s.label} className="min-w-0">
+          <dt
+            className="text-[0.65rem] leading-tight text-limestone/70 sm:text-xs lg:text-sm"
+            style={{ fontVariantCaps: "all-small-caps" }}
+          >
+            {s.label}
+          </dt>
+          <dd className="mt-1 font-display text-2xl leading-none text-terracotta sm:mt-2 sm:text-3xl lg:text-4xl xl:text-5xl">
+            <CountUp value={s.value} suffix={s.suffix} />
+          </dd>
         </div>
       ))}
     </dl>
   );
 
+  /* ---------- Fallback: reduced motion / no pinning ---------- */
   if (!pinned) {
     return (
-      <section ref={ref} className="bg-charcoal pt-32 text-limestone">
+      <section ref={ref} className="bg-charcoal pt-28 text-limestone sm:pt-32">
         <div className="container-x">{copy}</div>
-        <div className="container-x mt-14">
-          <CurtainImage image={images.hero} priority parallax className="arch aspect-[4/5] w-full" curtain="bg-charcoal" />
+        <div className="container-x mt-12 sm:mt-14">
+          <CurtainImage
+            image={images.hero}
+            priority
+            parallax
+            className="arch aspect-[4/5] w-full"
+            curtain="bg-charcoal"
+          />
         </div>
-        <div className="container-x py-12">{statStrip}</div>
+        <div className="container-x flex justify-start py-12 sm:py-14">{statStrip}</div>
       </section>
     );
   }
 
+  /* ---------- Pinned scroll hero ---------- */
   return (
     <section ref={ref} className="relative h-[230vh] bg-charcoal text-limestone">
       <div className="sticky top-0 h-screen overflow-hidden">
+        {/* Arch image that opens into a full-bleed frame */}
         <motion.div className="absolute inset-0" style={{ clipPath: clip }}>
           <motion.img
             src={images.hero.src}
@@ -96,9 +124,21 @@ function HeroInner({ pinned }: { pinned: boolean }) {
           />
           <motion.div aria-hidden className="absolute inset-0 bg-charcoal" style={{ opacity: overlay }} />
         </motion.div>
-        <div className="container-x relative flex h-full flex-col justify-center pb-8 pt-24">
-          <motion.div style={{ x: textX, opacity: textOpacity }} className="max-w-[48%]">{copy}</motion.div>
-          <div className="mt-12 max-w-[48%]">{statStrip}</div>
+
+        {/* Readability scrim — vertical on mobile, horizontal on desktop */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal/95 via-charcoal/60 to-charcoal/35 lg:bg-gradient-to-r lg:from-charcoal lg:via-charcoal/50 lg:to-transparent"
+        />
+
+        {/* Content column — copy then stats, both left-aligned, never overlapping */}
+        <div className="container-x relative flex h-full flex-col justify-center gap-6 pb-8 pt-24 sm:gap-8 sm:pb-10 lg:gap-10 lg:pb-14 lg:pt-32">
+          <motion.div style={{ x: textX, opacity: textOpacity }} className="w-full">
+            {copy}
+          </motion.div>
+          <motion.div style={{ opacity: textOpacity }} className="flex w-full justify-start">
+            {statStrip}
+          </motion.div>
         </div>
       </div>
     </section>
@@ -146,78 +186,151 @@ export function AboutIntro() {
 }
 
 /* S4 — Horizontal Estate Gallery */
+/* S4 — Horizontal Estate Gallery */
 export function ProjectsGallery() {
   const pinned = usePinnedMotion();
   return <ProjectsGalleryInner key={String(pinned)} pinned={pinned} />;
 }
+
 function ProjectsGalleryInner({ pinned }: { pinned: boolean }) {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const x = useTransform(scrollYProgress, [0, 1], ["0vw", "-200vw"]);
-  const bg = useTransform(scrollYProgress, [0, 0.45, 0.55, 1], ["oklch(0.37 0.05 35)", "oklch(0.53 0.04 125)", "oklch(0.53 0.04 125)", "oklch(0.27 0.01 90)"]);
-  const imgX = useTransform(scrollYProgress, [0, 1], ["6%", "-6%"]);
+  const bg = useTransform(
+    scrollYProgress,
+    [0, 0.45, 0.55, 1],
+    ["oklch(0.37 0.05 35)", "oklch(0.53 0.04 125)", "oklch(0.53 0.04 125)", "oklch(0.27 0.01 90)"],
+  );
+  const imgX = useTransform(scrollYProgress, [0, 1], ["4%", "-4%"]);
   const [idx, setIdx] = useState(0);
   useMotionValueEvent(scrollYProgress, "change", (v) => setIdx(Math.round(v * 2)));
 
+  const header = (
+    <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="min-w-0">
+        <Eyebrow>{projectsIntro.eyebrow}</Eyebrow>
+        <h2 id="projects-h" className="text-h2 mt-4 max-w-[18ch]">
+          {projectsIntro.title}
+        </h2>
+      </div>
+      {pinned && (
+        <p
+          className="font-display text-6xl leading-none text-transparent lg:text-7xl"
+          style={{ WebkitTextStroke: "1px var(--limestone)" }}
+          aria-hidden
+        >
+          {idx + 1} / 3
+        </p>
+      )}
+    </div>
+  );
+
+  /* ---------- Mobile / reduced-motion: vertical stacked cards ---------- */
+  if (!pinned) {
+    return (
+      <section
+        ref={ref}
+        aria-labelledby="projects-h"
+        className="bg-rosewood py-20 text-limestone sm:py-24"
+      >
+        <div className="container-x">{header}</div>
+
+        <ol className="container-x mt-12 grid gap-14 sm:gap-16 lg:grid-cols-3 lg:gap-8">
+          {homeProjects.map((p) => (
+            <li key={p.slug} className="group flex flex-col">
+              <div className="overflow-hidden rounded-2xl sm:rounded-3xl">
+                <img
+                  src={p.image.src}
+                  alt={p.image.alt}
+                  width={p.image.width}
+                  height={p.image.height}
+                  loading="lazy"
+                  className="aspect-[4/3] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                />
+              </div>
+
+              <div className="mt-6 flex flex-1 flex-col">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                  <span className="tag">{p.tag}</span>
+                  <span className="text-sm text-limestone/75">{p.location}</span>
+                </div>
+
+                <h3 className="text-h3 mt-4">{p.name}</h3>
+                <p className="mt-3 max-w-[44ch] text-limestone/85">{p.text}</p>
+
+                <a
+                  href={`/projects/${p.slug}`}
+                  className="group/link mt-6 inline-flex w-fit items-center gap-3 border-b border-limestone/40 pb-1 font-medium transition-colors hover:border-limestone"
+                  aria-label={`Explore Project: ${p.name}, ${p.location}`}
+                >
+                  Explore Project
+                </a>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+    );
+  }
+
+  /* ---------- Desktop: pinned horizontal scroll ---------- */
   return (
     <motion.section
       ref={ref}
-      style={pinned ? { backgroundColor: bg } : {}}
-      className={cn("text-limestone", pinned ? "h-[300vh]" : "bg-rosewood py-24")}
+      style={{ backgroundColor: bg }}
       aria-labelledby="projects-h"
+      className="relative h-[300vh] text-limestone"
     >
-      <div className={cn(pinned && "sticky top-0 flex h-screen flex-col overflow-hidden")}>
-        <div className="container-x flex items-end justify-between pt-24">
-          <div>
-            <Eyebrow>{projectsIntro.eyebrow}</Eyebrow>
-            <h2 id="projects-h" className="text-h2 mt-4 max-w-[18ch]">{projectsIntro.title}</h2>
-          </div>
-          {pinned && (
-            <p className="font-display text-7xl text-transparent" style={{ WebkitTextStroke: "1px var(--limestone)" }} aria-hidden>
-              {idx + 1} / 3
-            </p>
-          )}
-        </div>
-        <motion.ol
-          style={pinned ? { x } : {}}
-          className={cn("flex", pinned ? "mt-8 flex-1" : "mt-12 snap-x snap-mandatory gap-5 overflow-x-auto px-[var(--gutter)] pb-6")}
-        >
-          {homeProjects.map((p, i) => (
-            <li key={p.slug} className={cn(pinned ? "w-screen shrink-0" : "w-[85vw] shrink-0 snap-start sm:w-[60vw]")}>
-              <div className={cn(pinned && "container-x grid h-full grid-cols-12 items-center gap-10 pb-16")}>
-                <div className={cn("arch overflow-hidden", pinned ? "col-span-5 h-[62vh]" : "aspect-[4/5]")}>
-                  {pinned ? (
-                    <motion.img src={p.image.src} alt={p.image.alt} width={p.image.width} height={p.image.height} loading="lazy" style={{ x: imgX, scale: 1.15 }} className="h-full w-full object-cover" />
-                  ) : (
-                    <img src={p.image.src} alt={p.image.alt} width={p.image.width} height={p.image.height} loading="lazy" className="h-full w-full object-cover" />
-                  )}
+      <div className="sticky top-0 flex h-screen flex-col overflow-hidden">
+        <div className="container-x pt-20 lg:pt-14">{header}</div>
+
+        <motion.ol style={{ x }} className="flex flex-1 items-center">
+          {homeProjects.map((p) => (
+            <li key={p.slug} className="w-screen shrink-0">
+              <div className="container-x grid grid-cols-12 items-center gap-8 lg:gap-12">
+                {/* Image — rounded rectangle */}
+                <div className="col-span-6 col-start-1">
+                  <div className="overflow-hidden rounded-2xl sm:rounded-3xl">
+                    <motion.img
+                      src={p.image.src}
+                      alt={p.image.alt}
+                      width={p.image.width}
+                      height={p.image.height}
+                      loading="lazy"
+                      style={{ x: imgX, scale: 1.1 }}
+                      className="h-[44vh] w-full object-cover lg:h-[56vh]"
+                    />
+                  </div>
                 </div>
-                <div className={cn(pinned ? "col-span-6 col-start-7" : "mt-6")}>
-                  <span className="tag">{p.tag}</span>
-                  <p className="mt-6 text-limestone/80">{p.location}</p>
-                  <h3 className={cn("mt-2", pinned ? "text-display-l" : "text-h2")}>{p.name}</h3>
-                  <p className="mt-6 max-w-md font-display text-[1.5rem] leading-snug">{p.text}</p>
+
+                {/* Content — vertically centered, left aligned */}
+                <div className="col-span-5 col-start-8 flex flex-col justify-center">
+                  <span className="tag w-fit">{p.tag}</span>
+
+                  <p className="mt-5 text-sm text-limestone/80 lg:text-base">{p.location}</p>
+
+                  <h3 className="text-display-l mt-2">{p.name}</h3>
+
+                  <p className="mt-5 max-w-md font-display text-lg leading-snug lg:text-[1.5rem]">
+                    {p.text}
+                  </p>
+
                   <a
                     href={`/projects/${p.slug}`}
-                    className="group mt-8 inline-flex items-center gap-3 border-b border-limestone/40 pb-1 font-medium hover:border-limestone"
+                    className="mt-8 inline-flex w-fit items-center gap-3 border-b border-limestone/40 pb-1 font-medium transition-colors hover:border-limestone"
                     aria-label={`Explore Project: ${p.name}, ${p.location}`}
                   >
-                    Explore Project <span className="sr-only">{p.name}</span>
+                    Explore Project
                   </a>
-                  {"caption" in p.image && <p className="mt-6 text-xs text-limestone/60">{p.image.caption}</p>}
                 </div>
-                {pinned && i === 0 && null}
               </div>
             </li>
           ))}
         </motion.ol>
-        {pinned && (
-          <div className="container-x pb-8">
-            <div className="h-px bg-limestone/20">
-              <motion.div className="h-px origin-left bg-terracotta" style={{ scaleX: scrollYProgress }} />
-            </div>
-          </div>
-        )}
+
+        <div className="container-x pb-8">
+
+        </div>
       </div>
     </motion.section>
   );
@@ -241,29 +354,57 @@ function PillarIcon({ kind }: { kind: string }) {
 export function WhyChoose() {
   return (
     <section aria-labelledby="why-h" className="bg-limestone">
-      <div className="container-x section-y pb-16">
+      <div className="container-x pt-20 pb-14 sm:pt-24 lg:pt-28">
         <Eyebrow>{whyIntro.eyebrow}</Eyebrow>
-        <h2 id="why-h" className="text-h2 mt-6 max-w-[18ch]"><RiseText>{whyIntro.title}</RiseText></h2>
+        <h2 id="why-h" className="text-h2 mt-6 max-w-[18ch]">
+          <RiseText>{whyIntro.title}</RiseText>
+        </h2>
       </div>
+
       <div>
         {pillars.map((p, i) => (
-          <div key={p.title} className={cn("sticky top-0 flex min-h-[80vh] items-center text-limestone lg:h-screen", p.bg)} style={{ zIndex: i + 1 }}>
-            <div className="container-x grid gap-10 py-20 lg:grid-cols-12">
-              <p className="font-display text-terracotta lg:col-span-2" aria-hidden>0{i + 1}</p>
+          <div
+            key={p.title}
+            className={cn(
+              "sticky top-0 flex items-center text-limestone",
+              "min-h-[auto] py-16 sm:py-20 lg:min-h-[70vh] lg:py-24",
+              p.bg,
+            )}
+            style={{ zIndex: i + 1 }}
+          >
+            <div className="container-x grid w-full items-center gap-8 lg:grid-cols-12 lg:gap-10">
+              <p
+                aria-hidden
+                className="font-display text-3xl text-terracotta sm:text-4xl lg:col-span-2 lg:text-5xl"
+              >
+                0{i + 1}
+              </p>
+
               <div className="lg:col-span-6">
                 <PillarIcon kind={p.icon} />
-                <h3 className="text-display-l mt-8">{p.title}</h3>
+                <h3 className="text-display-l mt-6 lg:mt-8">{p.title}</h3>
               </div>
-              <p className="self-end font-display text-[1.6rem] leading-snug lg:col-span-4">{p.text}</p>
+
+              <p className="font-display text-lg leading-snug sm:text-xl lg:col-span-4 lg:text-[1.6rem]">
+                {p.text}
+              </p>
             </div>
           </div>
         ))}
       </div>
-      <dl className="container-x relative z-10 grid grid-cols-1 gap-10 bg-limestone py-24 sm:grid-cols-3">
+
+      <dl className="container-x relative z-10 grid grid-cols-1 gap-8 bg-limestone py-16 sm:grid-cols-3 sm:gap-10 lg:py-20">
         {stats.map((s) => (
-          <div key={s.label} className="border-t border-charcoal/15 pt-6">
-            <dd className="text-display-l"><CountUp value={s.value} suffix={s.suffix} /></dd>
-            <dt className="mt-2 text-charcoal/75" style={{ fontVariantCaps: "all-small-caps" }}>{s.label}</dt>
+          <div key={s.label} className="border-t border-charcoal/15 pt-5">
+            <dd className="text-display-l">
+              <CountUp value={s.value} suffix={s.suffix} />
+            </dd>
+            <dt
+              className="mt-2 text-charcoal/75"
+              style={{ fontVariantCaps: "all-small-caps" }}
+            >
+              {s.label}
+            </dt>
           </div>
         ))}
       </dl>

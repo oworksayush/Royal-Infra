@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { EnquiryForm } from "@/components/pages/EnquiryForm";
-
 import { shouldShowEntranceFlow } from "@/lib/entrance";
+import logoImg from "@/assets/Royal_Infra_Logo.png";
 
 const DELAY_MS = 2400;
 
@@ -184,6 +184,15 @@ export function SiteEnquiryPopup() {
                   aria-hidden
                 />
               </motion.button>
+
+              {/* Brand Logo */}
+              <div className="relative mb-2">
+                <img
+                  src={logoImg}
+                  alt="Royal Infra"
+                  className="h-8 sm:h-9 w-auto max-w-[140px] object-contain brightness-0 invert opacity-95"
+                />
+              </div>
 
               {/* Title */}
               <h2

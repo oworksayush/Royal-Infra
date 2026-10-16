@@ -41,7 +41,7 @@ export const about = {
     { name: "Mr. Vivekanand Maroor", role: "Director, Operations", image: images.directorVivek, bio: "A seasoned leader with 40+ years of experience, Mr. Vivekanand Maroor brings unmatched expertise across industries such as real estate, steel, aluminum, power, pipelines, IT parks, hospitality, residential, nuclear, petrochemicals, and infrastructure. His proven leadership ensures project excellence, operational efficiency, and sustainable growth for the company." },
   ],
   testimonialsIntro: { eyebrow: "Testimonials", title: "What Our Clients Say", sub: "Discover how Royal Infra has helped homeowners and investors build their dreams on trust." },
-  servicesIntro: { eyebrow: "What We Do", title: "Our Services" },
+  servicesIntro: { eyebrow: "What We Do", title: "What We Do" },
   services: [
     { title: "Plotted Developments", text: "Premium, strategically located plots with comprehensive amenities, clear titles, and government approvals.", image: images.svcPlots },
     { title: "Residential Apartments", text: "Modern living spaces designed for comfort, luxury, and community living in prime locations.", image: images.svcApts },

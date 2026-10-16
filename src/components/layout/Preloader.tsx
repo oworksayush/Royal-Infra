@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { shouldShowEntranceFlow } from "@/lib/entrance";
+import logoImg from "@/assets/Royal_Infra_Logo.png";
 
 export function Preloader() {
   const [show, setShow] = useState(() => {
@@ -115,59 +116,19 @@ export function Preloader() {
           }}
           className="relative z-20 flex flex-col items-center text-center px-6"
         >
-          {/* Architectural Archway Icon */}
-          <div className="relative mb-5 flex items-center justify-center">
-            <svg
-              viewBox="0 0 48 56"
-              className="h-14 w-12 text-limestone drop-shadow-[0_2px_12px_rgba(196,109,78,0.2)]"
-              fill="none"
-              stroke="currentColor"
-            >
-              {/* Outer Arch */}
-              <motion.path
-                d="M4 54 V24 C4 13, 44 13, 44 24 V54"
-                stroke="var(--color-terracotta, #c46d4e)"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              />
-
-              {/* Inner Arch */}
-              <motion.path
-                d="M14 54 V28 C14 18, 34 18, 34 28 V54"
-                stroke="currentColor"
-                strokeWidth="1.4"
-                strokeOpacity="0.8"
-                strokeLinecap="round"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-              />
-
-              {/* Base Line */}
-              <line
-                x1="2"
-                y1="54"
-                x2="46"
-                y2="54"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeOpacity="0.35"
-              />
-            </svg>
-          </div>
-
-          {/* Clean Brand Title */}
-          <h1 className="font-display text-2xl sm:text-3xl tracking-tight text-limestone font-light">
-            Royal Infra
-          </h1>
-
-          {/* Subtitle */}
-          <p className="mt-1 text-[10px] sm:text-[11px] font-medium tracking-[0.28em] uppercase text-limestone/50">
-            Realty & Infrastructure
-          </p>
+          {/* Official Royal Infra Company Logo */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="relative mb-3 flex items-center justify-center"
+          >
+            <img
+              src={logoImg}
+              alt="Royal Infra"
+              className="h-16 sm:h-20 w-auto max-w-[220px] sm:max-w-[260px] object-contain brightness-0 invert drop-shadow-[0_4px_20px_rgba(196,109,78,0.25)]"
+            />
+          </motion.div>
 
           {/* Minimalist Hairline Progress Bar (No Numbers, Pure Sophistication) */}
           <div className="mt-7 w-40 sm:w-48">

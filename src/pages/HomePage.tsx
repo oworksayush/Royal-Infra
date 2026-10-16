@@ -2,6 +2,7 @@ import {
   AboutIntro,
   Cta,
   Faq,
+  FestiveOffers,
   Hero,
   PathToOwnership,
   ProjectsGallery,
@@ -18,6 +19,7 @@ export function HomePage() {
       <Hero />
       <Ticker />
       <AboutIntro />
+      <FestiveOffers />
       <ProjectsGallery />
       <WhyChoose />
       <Services />

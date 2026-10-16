@@ -48,7 +48,7 @@ export function ContactPage() {
           </div>
           <div className="lg:col-span-6 lg:col-start-7">
             <EnquiryForm />
-            <div className="arch mt-20 aspect-[4/5] overflow-hidden bg-charcoal/10">
+            <div className="mt-20 aspect-[4/3] overflow-hidden rounded-2xl bg-charcoal/10 ring-1 ring-charcoal/10 sm:rounded-3xl">
               <iframe
                 title="Royal Infra Realty office on Infantry Road, Bengaluru"
                 src={C.mapUrl}

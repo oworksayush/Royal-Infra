@@ -5,8 +5,10 @@ import { EnquiryForm } from "@/components/pages/EnquiryForm";
 import { shouldShowEntranceFlow } from "@/lib/entrance";
 import logoImg from "@/assets/Royal_Infra_Logo.png";
 
-const DELAY_MS = 2400;
-const LIVE_OFFER_DURATION_MS = 4000;
+const DELAY_MS = 2400;              // initial wait before popup opens
+const POPUP_DURATION_MS = 5000;     // popup stays on screen this long
+const OFFER_GAP_MS = 450;           // pause between popup closing and offer appearing
+const LIVE_OFFER_DURATION_MS = 5000; // offer stays on screen this long
 
 /* ─────────────────────────────────────────────────────────────
    Motion variants
@@ -49,49 +51,37 @@ const childVariants = {
   },
 };
 
-const hairlineVariants = {
-  hidden: { scaleX: 0, originX: 0 },
-  visible: {
-    scaleX: 1,
-    transition: {
-      duration: 0.7,
-      ease: [0.22, 1, 0.36, 1] as const,
-      delay: 0.15,
-    },
-  },
-};
+/* ─────────────────────────────────────────────────────────────
+   Flow state machine
+   waiting → popup → gap → offer → done
+   ───────────────────────────────────────────────────────────── */
+type FlowStage = "waiting" | "popup" | "gap" | "offer" | "done";
 
 /* ─────────────────────────────────────────────────────────────
    Live Offer Notification — Royal Utsav 2026 Festive Card
-   Right corner · auto-dismiss with visible countdown
+   Fully controlled by parent via `visible` + `onDismiss`.
    ───────────────────────────────────────────────────────────── */
-function LiveOfferNotification({ show }: { show: boolean }) {
-  const [visible, setVisible] = useState(false);
+function LiveOfferNotification({
+  visible,
+  onDismiss,
+}: {
+  visible: boolean;
+  onDismiss: () => void;
+}) {
   const [secondsLeft, setSecondsLeft] = useState(
     Math.ceil(LIVE_OFFER_DURATION_MS / 1000),
   );
 
+  // Visual countdown only — actual dismissal is driven by the parent state machine
   useEffect(() => {
-    if (!show) {
-      setVisible(false);
-      return;
-    }
-
-    setVisible(true);
+    if (!visible) return;
     setSecondsLeft(Math.ceil(LIVE_OFFER_DURATION_MS / 1000));
-
     const end = Date.now() + LIVE_OFFER_DURATION_MS;
     const interval = window.setInterval(() => {
-      const remaining = Math.max(0, Math.ceil((end - Date.now()) / 1000));
-      setSecondsLeft(remaining);
-      if (remaining <= 0) {
-        setVisible(false);
-        window.clearInterval(interval);
-      }
+      setSecondsLeft(Math.max(0, Math.ceil((end - Date.now()) / 1000)));
     }, 250);
-
     return () => window.clearInterval(interval);
-  }, [show]);
+  }, [visible]);
 
   return (
     <AnimatePresence>
@@ -110,7 +100,6 @@ function LiveOfferNotification({ show }: { show: boolean }) {
             aria-hidden
             className="absolute inset-0 bg-gradient-to-br from-[oklch(0.34_0.07_45)] via-charcoal to-charcoal"
           />
-          {/* Soft radial warmth in the corner */}
           <div
             aria-hidden
             className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,oklch(0.55_0.12_45/0.28),transparent_60%)]"
@@ -130,7 +119,7 @@ function LiveOfferNotification({ show }: { show: boolean }) {
             className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-terracotta to-transparent"
           />
 
-          {/* Ornamental corner arcs (top-right, bottom-left) */}
+          {/* Ornamental corner arcs */}
           <div
             aria-hidden
             className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full border border-terracotta/25"
@@ -153,7 +142,6 @@ function LiveOfferNotification({ show }: { show: boolean }) {
               <div className="flex items-center gap-2">
                 <span className="relative flex h-7 w-7 items-center justify-center rounded-full bg-terracotta/20 text-terracotta">
                   <Sparkles className="h-3.5 w-3.5" strokeWidth={1.75} />
-                  {/* Pulsing halo */}
                   <motion.span
                     aria-hidden
                     animate={{ scale: [1, 1.7, 1], opacity: [0.7, 0, 0.7] }}
@@ -172,7 +160,7 @@ function LiveOfferNotification({ show }: { show: boolean }) {
 
               <span
                 aria-live="polite"
-                className="font-mono text-[0.6rem] font-medium text-limestone/45 tabular-nums"
+                className="font-mono text-[0.6rem] font-medium tabular-nums text-limestone/45"
               >
                 {secondsLeft}s
               </span>
@@ -223,7 +211,7 @@ function LiveOfferNotification({ show }: { show: boolean }) {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              setVisible(false);
+              onDismiss();
             }}
             className="group/close absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full text-limestone/50 transition-colors duration-300 hover:bg-limestone/10 hover:text-limestone"
           >
@@ -251,76 +239,106 @@ function LiveOfferNotification({ show }: { show: boolean }) {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   Site-wide Enquiry Popup
+   Site-wide Enquiry Popup + orchestrated Live Offer reveal
    ───────────────────────────────────────────────────────────── */
 export function SiteEnquiryPopup() {
-  const [open, setOpen] = useState(false);
-  const [showOffer, setShowOffer] = useState(false);
+  const [stage, setStage] = useState<FlowStage>("waiting");
+  const [popupSecondsLeft, setPopupSecondsLeft] = useState(
+    Math.ceil(POPUP_DURATION_MS / 1000),
+  );
 
-  // Trigger popup only on page refresh or initial visit
+  /* 1 · Kick off the sequence on fresh visit / refresh */
   useEffect(() => {
-    if (!shouldShowEntranceFlow()) return;
-
-    const timer = setTimeout(() => {
-      setOpen(true);
-    }, DELAY_MS);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Reveal Live Offer a beat after the dialog opens
-  useEffect(() => {
-    if (!open) {
-      setShowOffer(false);
+    if (!shouldShowEntranceFlow()) {
+      setStage("done");
       return;
     }
-    const t = window.setTimeout(() => setShowOffer(true), 600);
+    const t = window.setTimeout(() => setStage("popup"), DELAY_MS);
     return () => window.clearTimeout(t);
-  }, [open]);
+  }, []);
 
-  // Lock background scrolling while modal is open & handle Escape key
+  /* 2 · Popup countdown (visual only) */
   useEffect(() => {
-    if (!open) return;
+    if (stage !== "popup") return;
+    setPopupSecondsLeft(Math.ceil(POPUP_DURATION_MS / 1000));
+    const end = Date.now() + POPUP_DURATION_MS;
+    const interval = window.setInterval(() => {
+      setPopupSecondsLeft(Math.max(0, Math.ceil((end - Date.now()) / 1000)));
+    }, 250);
+    return () => window.clearInterval(interval);
+  }, [stage]);
 
+  /* 3 · Auto-close popup after 5s */
+  useEffect(() => {
+    if (stage !== "popup") return;
+    const t = window.setTimeout(() => setStage("gap"), POPUP_DURATION_MS);
+    return () => window.clearTimeout(t);
+  }, [stage]);
+
+  /* 4 · Brief gap so the popup exit animation finishes */
+  useEffect(() => {
+    if (stage !== "gap") return;
+    const t = window.setTimeout(() => setStage("offer"), OFFER_GAP_MS);
+    return () => window.clearTimeout(t);
+  }, [stage]);
+
+  /* 5 · Auto-dismiss offer after 5s */
+  useEffect(() => {
+    if (stage !== "offer") return;
+    const t = window.setTimeout(() => setStage("done"), LIVE_OFFER_DURATION_MS);
+    return () => window.clearTimeout(t);
+  }, [stage]);
+
+  /* 6 · Scroll lock while the popup is open */
+  const popupOpen = stage === "popup";
+  useEffect(() => {
+    if (!popupOpen) return;
     const prevOverflow = document.body.style.overflow;
     const prevPaddingRight = document.body.style.paddingRight;
-
     const scrollbarWidth =
       window.innerWidth - document.documentElement.clientWidth;
     if (scrollbarWidth > 0) {
       document.body.style.paddingRight = `${scrollbarWidth}px`;
     }
     document.body.style.overflow = "hidden";
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-
-    window.addEventListener("keydown", onKeyDown);
-
     return () => {
       document.body.style.overflow = prevOverflow;
       document.body.style.paddingRight = prevPaddingRight;
-      window.removeEventListener("keydown", onKeyDown);
     };
-  }, [open]);
+  }, [popupOpen]);
 
-  const close = () => setOpen(false);
+  /* 7 · Escape key — popup → gap, offer → done */
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setStage((prev) => {
+        if (prev === "popup") return "gap";
+        if (prev === "offer") return "done";
+        return prev;
+      });
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  const closePopup = () =>
+    setStage((prev) => (prev === "popup" ? "gap" : prev));
+  const closeOffer = () =>
+    setStage((prev) => (prev === "offer" ? "done" : prev));
 
   return (
     <>
       <AnimatePresence>
-        {open && (
+        {popupOpen && (
           <motion.div
             key="enquiry-backdrop"
             variants={backdropVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
-            onClick={close}
+            onClick={closePopup}
             className="fixed inset-0 z-[95] flex min-h-screen items-center justify-center overflow-y-auto overscroll-contain bg-charcoal/80 p-3 backdrop-blur-sm sm:p-5 md:p-6"
           >
-            {/* Dialog Container */}
             <motion.div
               key="enquiry-dialog"
               role="dialog"
@@ -348,12 +366,10 @@ export function SiteEnquiryPopup() {
                       "url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80')",
                   }}
                 />
-                {/* Legibility gradient */}
                 <div
                   aria-hidden
                   className="absolute inset-0 bg-gradient-to-r from-charcoal via-charcoal/85 to-charcoal/40"
                 />
-                {/* Bottom fade into limestone */}
                 <div
                   aria-hidden
                   className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-b from-transparent to-charcoal/60"
@@ -372,7 +388,7 @@ export function SiteEnquiryPopup() {
                 {/* Dismiss Button */}
                 <motion.button
                   type="button"
-                  onClick={close}
+                  onClick={closePopup}
                   aria-label="Close enquiry form"
                   whileHover={{ rotate: 90 }}
                   whileTap={{ scale: 0.92 }}
@@ -395,13 +411,22 @@ export function SiteEnquiryPopup() {
                   />
                 </div>
 
-                {/* Title */}
-                <h2
-                  id="site-enquiry-title"
-                  className="relative mt-1.5 font-display text-2xl font-light leading-tight tracking-tight text-limestone sm:text-3xl"
-                >
-                  Let's find your place.
-                </h2>
+                {/* Title row + inline countdown */}
+                <div className="relative flex items-start justify-between gap-4">
+                  <h2
+                    id="site-enquiry-title"
+                    className="mt-1.5 font-display text-2xl font-light leading-tight tracking-tight text-limestone sm:text-3xl"
+                  >
+                    Let's find your place.
+                  </h2>
+                  <span
+                    aria-live="polite"
+                    aria-label={`Auto-closing in ${popupSecondsLeft} seconds`}
+                    className="mt-2 shrink-0 font-mono text-[0.65rem] font-medium tabular-nums text-limestone/55"
+                  >
+                    {popupSecondsLeft}s
+                  </span>
+                </div>
 
                 {/* Description */}
                 <p
@@ -421,24 +446,37 @@ export function SiteEnquiryPopup() {
                 <EnquiryForm
                   compact
                   onSuccess={() => {
-                    setTimeout(() => setOpen(false), 4000);
+                    // Wait a beat so the user sees confirmation, then close
+                    setTimeout(() => {
+                      setStage((prev) => (prev === "popup" ? "gap" : prev));
+                    }, 2500);
                   }}
                 />
               </motion.div>
 
-              {/* ══ Terracotta Foundation Hairline (animated) ══════ */}
-              <motion.div
-                aria-hidden
-                variants={hairlineVariants}
-                className="h-[3px] w-full shrink-0 bg-gradient-to-r from-terracotta via-terracotta to-terracotta/60"
-              />
+              {/* ══ Animated countdown hairline ═══════════════════ */}
+              <div className="relative h-[3px] w-full shrink-0 overflow-hidden bg-charcoal/10">
+                <motion.div
+                  key="popup-timer"
+                  initial={{ scaleX: 1 }}
+                  animate={{ scaleX: 0 }}
+                  transition={{
+                    duration: POPUP_DURATION_MS / 1000,
+                    ease: "linear",
+                  }}
+                  className="absolute inset-0 origin-left bg-gradient-to-r from-terracotta via-terracotta to-terracotta/60"
+                />
+              </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Live Offer notification — festive Royal Utsav 2026 card */}
-      <LiveOfferNotification show={showOffer} />
+      {/* Live Offer — controlled entirely by the parent state machine */}
+      <LiveOfferNotification
+        visible={stage === "offer"}
+        onDismiss={closeOffer}
+      />
     </>
   );
 }

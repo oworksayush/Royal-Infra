@@ -11,7 +11,7 @@ import {
   useTransform,
 } from "framer-motion";
 import {
-  aboutIntro, cta, faqIntro, faqs, hero, homeProjects, pathIntro, pillars, projectsIntro,
+  aboutIntro, cta, faqIntro, faqs, festiveOffer, hero, homeProjects, pathIntro, pillars, projectsIntro,
   services, servicesIntro, stats, steps, testimonials, testimonialsIntro, ticker, whereWeBuild, whyIntro,
 } from "@/data/home";
 import { images } from "@/data/images";
@@ -181,6 +181,239 @@ export function AboutIntro() {
           </motion.svg>
         </div>
       </div>
+    </section>
+  );
+}
+
+/* ── Royal Utsav 2026 Festive Offers ──────────────────────── */
+import royalUtsavImg from "@/assets/Royal Utsav 2026 Festive Rewards.png";
+import { Gift, Home, ShieldCheck, Bike, Plane, MapPin, Sparkles, ArrowRight } from "lucide-react";
+
+const highlightIcons: Record<string, typeof Gift> = { gift: Gift, home: Home, shield: ShieldCheck };
+const rewardIcons: Record<string, typeof Bike> = { bike: Bike, plane: Plane };
+
+export function FestiveOffers() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const imageY = useTransform(scrollYProgress, [0, 1], ["6%", "-6%"]);
+  const imageScale = useTransform(scrollYProgress, [0, 0.5], [1.08, 1]);
+  const shimmerX = useTransform(scrollYProgress, [0.1, 0.5], ["-100%", "200%"]);
+
+  return (
+    <section
+      ref={sectionRef}
+      aria-labelledby="festive-h"
+      className="relative overflow-hidden bg-charcoal text-limestone"
+    >
+      {/* Subtle warm ambient background */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_20%_40%,oklch(0.37_0.08_45/0.3),transparent_70%)]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_80%_70%,oklch(0.30_0.06_35/0.25),transparent_60%)]"
+      />
+
+      <div className="container-x relative grid items-center gap-10 py-20 sm:py-24 lg:grid-cols-12 lg:gap-14 lg:py-28">
+        {/* ── Left: Festive Poster Image ───────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="relative lg:col-span-5"
+        >
+          <div className="relative overflow-hidden rounded-2xl ring-1 ring-terracotta/20 sm:rounded-3xl">
+            <motion.img
+              src={royalUtsavImg}
+              alt="Royal Utsav 2026 — Festive rewards including Honda Activa, Suzuki Burgman, and Bali holiday"
+              width={800}
+              height={800}
+              loading="lazy"
+              style={{ y: imageY, scale: imageScale }}
+              className="w-full object-cover"
+            />
+            {/* Shimmer overlay */}
+            <motion.div
+              aria-hidden
+              style={{ x: shimmerX }}
+              className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.07] to-transparent"
+            />
+          </div>
+
+          {/* Decorative glow behind the image */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -bottom-8 -left-8 h-40 w-40 rounded-full bg-terracotta/[0.12] blur-[60px]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-6 -top-6 h-32 w-32 rounded-full bg-terracotta/[0.08] blur-[50px]"
+          />
+        </motion.div>
+
+        {/* ── Right: Offer Details ──────────────────────────── */}
+        <div className="lg:col-span-6 lg:col-start-7">
+          {/* Eyebrow */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="flex items-center gap-2.5"
+          >
+            <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-terracotta/20 text-terracotta">
+              <Sparkles className="h-4 w-4" strokeWidth={1.75} />
+              <motion.span
+                aria-hidden
+                animate={{ scale: [1, 1.6, 1], opacity: [0.6, 0, 0.6] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+                className="absolute inset-0 rounded-full border border-terracotta/50"
+              />
+            </span>
+            <span className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-terracotta">
+              {festiveOffer.eyebrow}
+            </span>
+          </motion.div>
+
+          {/* Title */}
+          <motion.h2
+            id="festive-h"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-5 font-display text-[clamp(1.75rem,3.6vw,3.2rem)] font-[330] leading-[1.1] tracking-tight"
+          >
+            {festiveOffer.title.split(",").map((part, i) =>
+              i === 0 ? (
+                <span key={i}>{part},</span>
+              ) : (
+                <span key={i} className="italic text-terracotta">
+                  {part}
+                </span>
+              ),
+            )}
+          </motion.h2>
+
+          {/* Subtitle + Body */}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-4 max-w-lg text-sm leading-relaxed text-limestone/80 sm:text-base"
+          >
+            {festiveOffer.body}
+          </motion.p>
+
+          {/* ── Reward Cards ─────────────────────────────── */}
+          <div className="mt-8 grid gap-3 sm:mt-10 sm:grid-cols-3 sm:gap-4">
+            {festiveOffer.rewards.map((r, i) => {
+              const Icon = rewardIcons[r.icon] ?? Gift;
+              return (
+                <motion.div
+                  key={r.project}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{
+                    duration: 0.6,
+                    delay: 0.2 + i * 0.1,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  className="group relative overflow-hidden rounded-xl border border-limestone/10 bg-limestone/[0.04] p-4 backdrop-blur-sm transition-colors duration-500 hover:border-terracotta/30 hover:bg-limestone/[0.08] sm:p-5"
+                >
+                  {/* Corner glow on hover */}
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute -right-6 -top-6 h-16 w-16 rounded-full bg-terracotta/0 blur-[20px] transition-colors duration-500 group-hover:bg-terracotta/20"
+                  />
+
+                  {/* Location label */}
+                  <div className="flex items-center gap-1.5">
+                    <MapPin className="h-3 w-3 text-terracotta" strokeWidth={2} />
+                    <span className="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-limestone/60">
+                      {r.location}
+                    </span>
+                  </div>
+                  <p className="mt-0.5 text-[0.65rem] text-limestone/45">{r.project}</p>
+
+                  {/* Reward */}
+                  <div className="mt-3 flex items-center gap-2">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-terracotta/15 text-terracotta">
+                      <Icon className="h-3.5 w-3.5" strokeWidth={1.75} />
+                    </span>
+                    <span className="font-display text-[0.95rem] font-medium leading-tight sm:text-base">
+                      {r.reward}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-[0.7rem] leading-relaxed text-limestone/65">
+                    {r.description}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* ── Highlights strip ──────────────────────────── */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-8 flex flex-wrap items-center gap-4 border-t border-limestone/10 pt-6 sm:gap-6"
+          >
+            {festiveOffer.highlights.map((h) => {
+              const HIcon = highlightIcons[h.icon] ?? Gift;
+              return (
+                <div key={h.label} className="flex items-center gap-2 text-limestone/70">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-terracotta/10 text-terracotta">
+                    <HIcon className="h-4 w-4" strokeWidth={1.75} />
+                  </span>
+                  <span className="text-xs font-medium uppercase tracking-[0.12em]">
+                    {h.label}
+                  </span>
+                </div>
+              );
+            })}
+          </motion.div>
+
+          {/* ── CTA Button ────────────────────────────────── */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-8"
+          >
+            <a
+              href="/contact-us"
+              className="group/cta inline-flex items-center gap-3 rounded-full bg-terracotta px-7 py-3.5 text-sm font-semibold text-limestone transition-all duration-300 hover:bg-terracotta/90 hover:shadow-lg hover:shadow-terracotta/25 sm:text-base"
+            >
+              {festiveOffer.cta}
+              <ArrowRight
+                className="h-4 w-4 transition-transform duration-300 group-hover/cta:translate-x-1"
+                strokeWidth={2}
+              />
+            </a>
+            <p className="mt-4 text-[0.65rem] text-limestone/40">
+              {festiveOffer.disclaimer}
+            </p>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Bottom separator — warm gradient fade to limestone */}
+      <div
+        aria-hidden
+        className="pointer-events-none h-px bg-gradient-to-r from-transparent via-terracotta/30 to-transparent"
+      />
     </section>
   );
 }

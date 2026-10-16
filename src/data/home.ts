@@ -102,3 +102,40 @@ export const cta = {
   title: "Start Your Investment Journey Today",
   body: "Connect with our property experts to find the perfect plot for your future.",
 };
+
+export const festiveOffer = {
+  eyebrow: "Royal Utsav 2026",
+  title: "This Festive Season, Celebrate More.",
+  subtitle: "Your dream plot. Extraordinary rewards.",
+  body: "Book your premium plot at any Royal Infra project this festive season and unlock exclusive rewards. From a Honda Activa to a fully sponsored Bali holiday for two — every plot comes with a celebration.",
+  rewards: [
+    {
+      location: "Gadag",
+      project: "Royal Park",
+      reward: "Honda Activa",
+      description: "Get a brand new Honda Activa on booking your plot at Royal Park.",
+      icon: "bike" as const,
+    },
+    {
+      location: "Gundelpet",
+      project: "Dollars Colony",
+      reward: "Suzuki Burgman",
+      description: "Ride home a Suzuki Burgman when you invest in Dollars Colony.",
+      icon: "bike" as const,
+    },
+    {
+      location: "Mysuru",
+      project: "Palm Serenity",
+      reward: "Bali Holiday for Two",
+      description: "A fully sponsored Bali holiday for two awaits Palm Serenity buyers.",
+      icon: "plane" as const,
+    },
+  ],
+  highlights: [
+    { label: "Big Festive Offers", icon: "gift" as const },
+    { label: "Premium Plots", icon: "home" as const },
+    { label: "Trusted Developer", icon: "shield" as const },
+  ],
+  cta: "Claim Your Festive Reward",
+  disclaimer: "*Terms & conditions apply. Offer valid during the festive season only.",
+};

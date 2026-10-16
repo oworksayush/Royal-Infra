@@ -37,7 +37,16 @@ export function ProjectPage({ slug }: { slug: string }) {
             {others.map((o) => (
               <li key={o.slug}>
                 <a href={`/projects/${o.slug}`} className="group grid grid-cols-[120px_1fr] items-center gap-6">
-                  <img src={o.hero.src} alt="" width={o.hero.width} height={o.hero.height} loading="lazy" className="arch aspect-[4/5] w-full object-cover" />
+                  <div className="aspect-[4/5] w-full overflow-hidden rounded-2xl">
+                    <img
+                      src={o.hero.src}
+                      alt=""
+                      width={o.hero.width}
+                      height={o.hero.height}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    />
+                  </div>
                   <span>
                     <span className="text-h3 block group-hover:underline">{o.name}</span>
                     <span className="mt-1 block text-limestone/80">{o.listMeta}</span>
@@ -105,7 +114,12 @@ function Overview({ p }: { p: Project }) {
       <div className="container-x grid gap-16 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <div className="lg:sticky lg:top-28">
-            <CurtainImage image={p.gallery.find((g) => g.src) ?? p.hero} parallax className="arch aspect-[4/5] w-full" curtain="bg-olive" />
+            <CurtainImage
+              image={p.gallery.find((g) => g.src) ?? p.hero}
+              parallax
+              className="aspect-[4/5] w-full overflow-hidden rounded-2xl sm:rounded-3xl"
+              curtain="bg-olive"
+            />
           </div>
         </div>
         <div className="lg:col-span-6 lg:col-start-7">
@@ -184,7 +198,7 @@ function Gallery({ images }: { images: ImageEntry[] }) {
               const idx = images.indexOf(img);
               return (
                 <button key={img.id} type="button" onClick={() => setOpen(idx)} aria-label={`Open image: ${img.alt}`} className="block text-left">
-                  <motion.div layoutId={`g-${img.id}`}>
+                  <motion.div layoutId={`g-${img.id}`} className="overflow-hidden rounded-2xl">
                     <CurtainImage image={img} className={cn("w-full", idx % 2 ? "aspect-[4/5]" : "aspect-[3/2]")} curtain="bg-olive" />
                   </motion.div>
                 </button>
@@ -197,7 +211,9 @@ function Gallery({ images }: { images: ImageEntry[] }) {
       <div className="container-x mt-4 grid grid-cols-2 gap-4 md:hidden">
         {cols[2]!.map((img) => (
           <button key={img.id} type="button" onClick={() => setOpen(images.indexOf(img))} aria-label={`Open image: ${img.alt}`}>
-            <CurtainImage image={img} className="aspect-[4/5] w-full" curtain="bg-olive" />
+            <div className="overflow-hidden rounded-2xl">
+              <CurtainImage image={img} className="aspect-[4/5] w-full" curtain="bg-olive" />
+            </div>
           </button>
         ))}
       </div>
@@ -226,13 +242,13 @@ function Lightbox({ images, index, setIndex }: { images: ImageEntry[]; index: nu
       {img && (
         <motion.div role="dialog" aria-modal="true" aria-label={img.alt} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
           className="fixed inset-0 z-[90] flex items-center justify-center bg-charcoal/95 p-6" onClick={() => setIndex(null)}>
-          <motion.figure layoutId={`g-${img.id}`} className="max-h-[85vh] w-full max-w-5xl" onClick={(e) => e.stopPropagation()}>
+          <motion.figure layoutId={`g-${img.id}`} className="max-h-[85vh] w-full max-w-5xl overflow-hidden rounded-2xl" onClick={(e) => e.stopPropagation()}>
             {img.src ? (
               <img src={img.src} alt={img.alt} width={img.width} height={img.height} className="max-h-[78vh] w-full object-contain" />
             ) : (
               <div className="flex aspect-[3/2] items-center justify-center bg-limestone text-charcoal/60">Original photo to be uploaded</div>
             )}
-            <figcaption className="mt-4 text-sm text-limestone/85">{img.alt}{img.caption ? ` · ${img.caption}` : ""}</figcaption>
+            <figcaption className="mt-4 px-1 text-sm text-limestone/85">{img.alt}{img.caption ? ` · ${img.caption}` : ""}</figcaption>
           </motion.figure>
           <button ref={closeRef} type="button" aria-label="Close gallery" onClick={() => setIndex(null)} className="absolute right-6 top-6 flex h-11 w-11 items-center justify-center text-limestone"><X strokeWidth={1.25} /></button>
           <button type="button" aria-label="Previous image" onClick={(e) => { e.stopPropagation(); go(-1); }} className="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-limestone"><ChevronLeft strokeWidth={1.25} /></button>
@@ -300,11 +316,18 @@ function Approvals({ p }: { p: Project }) {
   );
 }
 
-/* S12 — Next project */
+/* S12 — Next project (rounded rectangle reveal) */
 function NextProject({ p }: { p: Project }) {
   const ref = useRef<HTMLAnchorElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end end"] });
-  const clip = useTransform(scrollYProgress, [0, 1], ["inset(12% 30% 12% 30% round 999px 999px 0px 0px)", "inset(0% 0% 0% 0% round 0px 0px 0px 0px)"]);
+  const clip = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [
+      "inset(10% 18% 10% 18% round 24px)",
+      "inset(0% 0% 0% 0% round 0px)",
+    ],
+  );
   return (
     <a ref={ref} href={`/projects/${p.slug}`} className="relative flex h-screen items-center justify-center overflow-hidden bg-charcoal text-limestone">
       <motion.div style={{ clipPath: clip }} className="absolute inset-0">

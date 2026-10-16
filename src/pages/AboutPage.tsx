@@ -101,7 +101,7 @@ function Leaders() {
             <article key={l.name} className="flex flex-col items-start">
               <CurtainImage
                 image={l.image}
-                className="aspect-square w-full max-w-md rounded-full"
+                className="aspect-[4/5] w-full max-w-md rounded-2xl"
                 curtain="bg-olive"
               />
               <h3 className="text-h3 mt-8">{l.name}</h3>

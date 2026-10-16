@@ -412,58 +412,44 @@ export function WhyChoose() {
   );
 }
 
-/* S6 — Image-reveal list */
+/* S6 — Image-reveal list (text-only) */
 type Intro = { eyebrow: string; title: string; sub?: string };
-export function Services({ items = services, intro = servicesIntro }: { items?: typeof services; intro?: Intro } = {}) {
-  const [active, setActive] = useState<number | null>(null);
+
+export function Services({
+  items = services,
+  intro = servicesIntro,
+}: { items?: typeof services; intro?: Intro } = {}) {
   const [tapped, setTapped] = useState<number | null>(null);
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const sx = useSpring(mx, { stiffness: 120, damping: 20 });
-  const sy = useSpring(my, { stiffness: 120, damping: 20 });
+
   return (
-    <section aria-labelledby="svc-h" className="section-y relative bg-charcoal text-limestone"
-      onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); mx.set(e.clientX - r.left); my.set(e.clientY - r.top); }}>
+    <section
+      aria-labelledby="svc-h"
+      className="section-y relative bg-charcoal text-limestone"
+    >
       <div className="container-x">
         <Eyebrow>{intro.eyebrow}</Eyebrow>
-        <h2 id="svc-h" className="text-h2 mt-6 max-w-[18ch]"><RiseText>{intro.title}</RiseText></h2>
+        <h2 id="svc-h" className="text-h2 mt-6 max-w-[18ch]">
+          <RiseText>{intro.title}</RiseText>
+        </h2>
+
         <ul className="mt-16 border-t border-limestone/15">
           {items.map((s, i) => (
-            <li key={s.title} className="border-b border-limestone/15" onMouseEnter={() => setActive(i)} onMouseLeave={() => setActive(null)}>
-              <button type="button" onClick={() => setTapped(tapped === i ? null : i)} aria-expanded={tapped === i}
-                className="grid w-full gap-4 py-8 text-left transition-transform duration-300 lg:grid-cols-12 lg:hover:translate-x-4">
+            <li key={s.title} className="border-b border-limestone/15">
+              <button
+                type="button"
+                onClick={() => setTapped(tapped === i ? null : i)}
+                aria-expanded={tapped === i}
+                className="grid w-full gap-4 py-8 text-left transition-transform duration-300 lg:grid-cols-12 lg:hover:translate-x-4"
+              >
                 <h3 className="text-h2 lg:col-span-7">{s.title}</h3>
-                <p className="text-limestone/80 lg:col-span-4 lg:col-start-9 lg:self-center">{s.text}</p>
+                <p className="text-limestone/80 lg:col-span-4 lg:col-start-9 lg:self-center">
+                  {s.text}
+                </p>
               </button>
-              <AnimatePresence>
-                {tapped === i && (
-                  <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden lg:hidden">
-                    <img src={s.image.src} alt={s.image.alt} width={s.image.width} height={s.image.height} loading="lazy" className="arch mb-8 aspect-[4/5] w-2/3 object-cover" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </li>
           ))}
         </ul>
       </div>
-      <motion.div aria-hidden style={{ x: sx, y: sy }} className="pointer-events-none absolute left-0 top-0 hidden lg:block">
-        <AnimatePresence>
-          {active !== null && (
-            <motion.img
-              key={active}
-              src={items[active]?.image.src}
-              alt=""
-              width={320}
-              height={400}
-              initial={{ clipPath: "inset(100% 0 0 0)" }}
-              animate={{ clipPath: "inset(0% 0 0 0)" }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="arch -ml-40 -mt-56 h-[400px] w-[320px] object-cover"
-            />
-          )}
-        </AnimatePresence>
-      </motion.div>
     </section>
   );
 }
@@ -772,24 +758,55 @@ export function Faq({
   );
 }
 
-export function Cta({ title = cta.title, body = cta.body, children }: { title?: string; body?: string; children?: React.ReactNode } = {}) {
+export function Cta({
+  title = cta.title,
+  body = cta.body,
+  children,
+}: { title?: string; body?: string; children?: React.ReactNode } = {}) {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const scale = useTransform(scrollYProgress, [0, 0.5], [0.94, 1]);
+
   return (
-    <section ref={ref} className="relative overflow-hidden text-limestone">
-      <img src={images.cta.src} alt="" aria-hidden width={images.cta.width} height={images.cta.height} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-      <div aria-hidden className="absolute inset-0 bg-charcoal/55" />
-      <motion.div style={{ scale }} className="container-x relative flex min-h-[80vh] flex-col items-start justify-center py-28">
-        <h2 className="text-display-l max-w-[14ch]">{title}</h2>
-        <p className="mt-6 max-w-md text-lg">{body}</p>
-        <div className="mt-10 flex flex-wrap gap-3">
-          {children ?? <>
-            <ButtonLink href="/contact-us" tone="light">Enquire Now</ButtonLink>
-            <ButtonA href={site.phoneHref} tone="light" className="bg-transparent text-limestone outline outline-1 outline-limestone/50">Call {site.phone}</ButtonA>
-          </>}
-        </div>
-      </motion.div>
+    <section ref={ref} className="bg-limestone py-16 sm:py-20 lg:py-24">
+      <div className="container-x">
+        <motion.div
+          style={{ scale }}
+          className="relative overflow-hidden rounded-2xl text-limestone sm:rounded-3xl"
+        >
+          <img
+            src={images.cta.src}
+            alt=""
+            aria-hidden
+            width={images.cta.width}
+            height={images.cta.height}
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div aria-hidden className="absolute inset-0 bg-charcoal/60" />
+
+          <div className="relative flex min-h-[60vh] flex-col items-start justify-center px-6 py-20 sm:px-10 sm:py-24 lg:min-h-[70vh] lg:px-16 lg:py-28">
+            <h2 className="text-display-l max-w-[14ch]">{title}</h2>
+            <p className="mt-6 max-w-md text-lg">{body}</p>
+            <div className="mt-10 flex flex-wrap gap-3">
+              {children ?? (
+                <>
+                  <ButtonLink href="/contact-us" tone="light">
+                    Enquire Now
+                  </ButtonLink>
+                  <ButtonA
+                    href={site.phoneHref}
+                    tone="light"
+                    className="bg-transparent text-limestone outline outline-1 outline-limestone/50"
+                  >
+                    Call {site.phone}
+                  </ButtonA>
+                </>
+              )}
+            </div>
+          </div>
+        </motion.div>
+      </div>
     </section>
   );
 }

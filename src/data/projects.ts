@@ -299,7 +299,7 @@ export const projects: Project[] = [
       },
       {
         q: "How can I enquire about plot availability?",
-        a: "Contact the sales team using the details below to request the latest availability, plot configurations, pricing and booking information. Phone: +91 98806 40077, +91 99010 10077. Email: sales@squaresinc.in. Project Address: Palm Serenity Resort & Plots, Survey No. 233, Mysore Mahadevapura Main Road, next to Vinayaka Central School, Taripura, Karnataka - 571477."
+        a: "Contact the sales team using the details below to request the latest availability, plot configurations, pricing and booking information. Phone: 9187712547, +91 99010 10077. Email: sales@squaresinc.in. Project Address: Palm Serenity Resort & Plots, Survey No. 233, Mysore Mahadevapura Main Road, next to Vinayaka Central School, Taripura, Karnataka - 571477."
       },
       {
         q: "Can I arrange a guided site visit?",

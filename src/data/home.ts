@@ -105,7 +105,7 @@ export const cta = {
 
 export const festiveOffer = {
   eyebrow: "Royal Utsav 2026",
-  title: "This Festive Season, Celebrate More.",
+  title: " Festive Season, Celebrate More.",
   subtitle: "Your dream plot. Extraordinary rewards.",
   body: "Book your premium plot at any Royal Infra project this festive season and unlock exclusive rewards. From a Honda Activa to a fully sponsored Bali holiday for two — every plot comes with a celebration.",
   rewards: [
@@ -137,5 +137,5 @@ export const festiveOffer = {
     { label: "Trusted Developer", icon: "shield" as const },
   ],
   cta: "Claim Your Festive Reward",
-  disclaimer: "*Terms & conditions apply. Offer valid during the festive season only.",
+  disclaimer: "",
 };

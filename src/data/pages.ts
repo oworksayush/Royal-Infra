@@ -77,7 +77,7 @@ export const locationsPage = {
 export const contactPage = {
   meta: {
     title: "Contact Royal Infra Realty | Bengaluru Office & Site Visits",
-    description: "Get in touch with Royal Infra Realty. Book a guided site visit for Palm Serenity, Royal Park or Dollars Colony. Call +91 98806 40007 or visit our Bengaluru office.",
+    description: "Get in touch with Royal Infra Realty. Book a guided site visit for Palm Serenity, Royal Park or Dollars Colony. Call +91 9187712547 or visit our Bengaluru office.",
   },
   crumb: "Contact",
   title: "Get in Touch With Royal Infra",

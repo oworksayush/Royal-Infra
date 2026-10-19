@@ -6,7 +6,6 @@ import { shouldShowEntranceFlow } from "@/lib/entrance";
 import logoImg from "@/assets/Royal_Infra_Logo.png";
 
 const DELAY_MS = 2400;              // initial wait before popup opens
-const POPUP_DURATION_MS = 5000;     // popup stays on screen this long
 const OFFER_GAP_MS = 450;           // pause between popup closing and offer appearing
 const LIVE_OFFER_DURATION_MS = 5000; // offer stays on screen this long
 
@@ -15,8 +14,8 @@ const LIVE_OFFER_DURATION_MS = 5000; // offer stays on screen this long
    ───────────────────────────────────────────────────────────── */
 const backdropVariants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.45, ease: "easeOut" } },
-  exit: { opacity: 0, transition: { duration: 0.25, ease: "easeIn" } },
+  visible: { opacity: 1, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const } },
+  exit: { opacity: 0, transition: { duration: 0.25, ease: [0.4, 0, 1, 1] as const } },
 };
 
 const dialogVariants = {
@@ -60,6 +59,7 @@ type FlowStage = "waiting" | "popup" | "gap" | "offer" | "done";
 /* ─────────────────────────────────────────────────────────────
    Live Offer Notification — Royal Utsav 2026 Festive Card
    Fully controlled by parent via `visible` + `onDismiss`.
+   Keeps the 5-second countdown and progress bar.
    ───────────────────────────────────────────────────────────── */
 function LiveOfferNotification({
   visible,
@@ -72,7 +72,7 @@ function LiveOfferNotification({
     Math.ceil(LIVE_OFFER_DURATION_MS / 1000),
   );
 
-  // Visual countdown only — actual dismissal is driven by the parent state machine
+  // Visual countdown — actual dismissal is driven by the parent state machine
   useEffect(() => {
     if (!visible) return;
     setSecondsLeft(Math.ceil(LIVE_OFFER_DURATION_MS / 1000));
@@ -243,9 +243,6 @@ function LiveOfferNotification({
    ───────────────────────────────────────────────────────────── */
 export function SiteEnquiryPopup() {
   const [stage, setStage] = useState<FlowStage>("waiting");
-  const [popupSecondsLeft, setPopupSecondsLeft] = useState(
-    Math.ceil(POPUP_DURATION_MS / 1000),
-  );
 
   /* 1 · Kick off the sequence on fresh visit / refresh */
   useEffect(() => {
@@ -257,39 +254,21 @@ export function SiteEnquiryPopup() {
     return () => window.clearTimeout(t);
   }, []);
 
-  /* 2 · Popup countdown (visual only) */
-  useEffect(() => {
-    if (stage !== "popup") return;
-    setPopupSecondsLeft(Math.ceil(POPUP_DURATION_MS / 1000));
-    const end = Date.now() + POPUP_DURATION_MS;
-    const interval = window.setInterval(() => {
-      setPopupSecondsLeft(Math.max(0, Math.ceil((end - Date.now()) / 1000)));
-    }, 250);
-    return () => window.clearInterval(interval);
-  }, [stage]);
-
-  /* 3 · Auto-close popup after 5s */
-  useEffect(() => {
-    if (stage !== "popup") return;
-    const t = window.setTimeout(() => setStage("gap"), POPUP_DURATION_MS);
-    return () => window.clearTimeout(t);
-  }, [stage]);
-
-  /* 4 · Brief gap so the popup exit animation finishes */
+  /* 2 · Brief gap so the popup exit animation finishes */
   useEffect(() => {
     if (stage !== "gap") return;
     const t = window.setTimeout(() => setStage("offer"), OFFER_GAP_MS);
     return () => window.clearTimeout(t);
   }, [stage]);
 
-  /* 5 · Auto-dismiss offer after 5s */
+  /* 3 · Auto-dismiss offer after 5s */
   useEffect(() => {
     if (stage !== "offer") return;
     const t = window.setTimeout(() => setStage("done"), LIVE_OFFER_DURATION_MS);
     return () => window.clearTimeout(t);
   }, [stage]);
 
-  /* 6 · Scroll lock while the popup is open */
+  /* 4 · Scroll lock while the popup is open */
   const popupOpen = stage === "popup";
   useEffect(() => {
     if (!popupOpen) return;
@@ -307,7 +286,7 @@ export function SiteEnquiryPopup() {
     };
   }, [popupOpen]);
 
-  /* 7 · Escape key — popup → gap, offer → done */
+  /* 5 · Escape key — popup → gap, offer → done */
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
@@ -411,22 +390,13 @@ export function SiteEnquiryPopup() {
                   />
                 </div>
 
-                {/* Title row + inline countdown */}
-                <div className="relative flex items-start justify-between gap-4">
-                  <h2
-                    id="site-enquiry-title"
-                    className="mt-1.5 font-display text-2xl font-light leading-tight tracking-tight text-limestone sm:text-3xl"
-                  >
-                    Let's find your place.
-                  </h2>
-                  <span
-                    aria-live="polite"
-                    aria-label={`Auto-closing in ${popupSecondsLeft} seconds`}
-                    className="mt-2 shrink-0 font-mono text-[0.65rem] font-medium tabular-nums text-limestone/55"
-                  >
-                    {popupSecondsLeft}s
-                  </span>
-                </div>
+                {/* Title */}
+                <h2
+                  id="site-enquiry-title"
+                  className="relative mt-1.5 font-display text-2xl font-light leading-tight tracking-tight text-limestone sm:text-3xl"
+                >
+                  Let's find your place.
+                </h2>
 
                 {/* Description */}
                 <p
@@ -454,19 +424,8 @@ export function SiteEnquiryPopup() {
                 />
               </motion.div>
 
-              {/* ══ Animated countdown hairline ═══════════════════ */}
-              <div className="relative h-[3px] w-full shrink-0 overflow-hidden bg-charcoal/10">
-                <motion.div
-                  key="popup-timer"
-                  initial={{ scaleX: 1 }}
-                  animate={{ scaleX: 0 }}
-                  transition={{
-                    duration: POPUP_DURATION_MS / 1000,
-                    ease: "linear",
-                  }}
-                  className="absolute inset-0 origin-left bg-gradient-to-r from-terracotta via-terracotta to-terracotta/60"
-                />
-              </div>
+              {/* ══ Static terracotta foundation hairline ═════════ */}
+              <div className="h-[3px] w-full shrink-0 bg-gradient-to-r from-terracotta via-terracotta to-terracotta/60" />
             </motion.div>
           </motion.div>
         )}

@@ -45,8 +45,7 @@ export function SocialLinks({ variant }: SocialLinksProps) {
               rel="noopener noreferrer"
               aria-label={social.label}
               title={social.label}
-              whileHover={reduceMotion ? undefined : { y: -4, scale: 1.06 }}
-              whileTap={reduceMotion ? undefined : { scale: 0.96 }}
+              {...(reduceMotion ? {} : { whileHover: { y: -4, scale: 1.06 }, whileTap: { scale: 0.96 } })}
               className={`group flex items-center justify-center rounded-full border transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta ${
                 footer
                   ? "h-11 w-11 border-limestone/20 text-limestone/75 hover:border-terracotta hover:bg-terracotta hover:text-charcoal"
@@ -62,9 +61,9 @@ export function SocialLinks({ variant }: SocialLinksProps) {
                 >
                   <path d="M18.9 2H22l-6.78 7.75L23.2 22h-6.25l-4.9-8.14L4.92 22H1.8l7.25-8.29L1.2 2h6.4l4.43 7.42L18.9 2Zm-1.1 18h1.73L6.67 3.88H4.81L17.8 20Z" />
                 </svg>
-              ) : (
+              ) : Icon ? (
                 <Icon aria-hidden className="h-[18px] w-[18px]" strokeWidth={1.7} />
-              )}
+              ) : null}
               {!footer && <span className="sr-only">{social.label}</span>}
             </motion.a>
           </motion.li>

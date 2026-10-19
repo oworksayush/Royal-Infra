@@ -698,30 +698,73 @@ export function Services({
   );
 }
 
-/* NEW (SEO) — Where we build, with a light route line */
 export function WhereWeBuild() {
-  const ref = useRef<HTMLOListElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.8", "end 0.6"] });
   return (
-    <section aria-labelledby="where-h" className="section-y bg-limestone">
-      <div className="container-x grid gap-14 lg:grid-cols-12">
-        <div className="lg:col-span-4">
-          <Eyebrow>{whereWeBuild.eyebrow}</Eyebrow>
-          <h2 id="where-h" className="text-h2 mt-6"><RiseText>{whereWeBuild.title}</RiseText></h2>
-        </div>
-        <ol ref={ref} className="relative lg:col-span-7 lg:col-start-6">
-          <div aria-hidden className="absolute bottom-2 left-[7px] top-2 w-px bg-charcoal/15">
-            <motion.div className="h-full w-px origin-top bg-terracotta" style={{ scaleY: scrollYProgress }} />
+    <section aria-labelledby="where-h" className="bg-limestone py-12 sm:py-16 lg:py-20">
+      <div className="container-x">
+        {/* ── Header: Split layout to balance the top ── */}
+        <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
+          <div>
+            <Eyebrow>{whereWeBuild.eyebrow}</Eyebrow>
+            <h2 id="where-h" className="text-h2 mt-4">
+              <RiseText>{whereWeBuild.title}</RiseText>
+            </h2>
           </div>
-          {whereWeBuild.items.map((it) => (
-            <li key={it.city} className="relative pb-14 pl-12 last:pb-0">
-              <span aria-hidden className="absolute left-0 top-3 h-[15px] w-[15px] rounded-full border border-charcoal bg-limestone" />
-              <h3 className="text-h3">{it.city}</h3>
-              <p className="measure mt-3">{it.text}</p>
-              <TextLink href={it.to} className="mt-4">{it.link}</TextLink>
-            </li>
+          <div className="flex items-end pb-1">
+            <p className="measure text-sm leading-relaxed text-charcoal/70 sm:text-base">
+              Discover our premium developments strategically located across Karnataka's most
+              promising growth corridors, from the bustling capital to serene heritage towns.
+            </p>
+          </div>
+        </div>
+
+        {/* ── 2x2 Grid: Compact boxes to fit perfectly on screen ── */}
+        <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:mt-12 lg:gap-5">
+          {whereWeBuild.items.map((it, i) => (
+            <motion.div
+              key={it.city}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{
+                delay: i * 0.08,
+                duration: 0.5,
+                ease: [0.22, 1, 0.36, 1]
+              }}
+              className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-charcoal/10 bg-charcoal/[0.02] p-5 transition-colors duration-500 hover:bg-charcoal/[0.04] sm:p-6"
+            >
+              {/* Animated gradient glow on hover */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 bg-gradient-to-br from-terracotta/[0.08] via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+              />
+
+              <div className="relative z-10">
+                <div className="flex items-center justify-between">
+                  <span className="font-display text-sm font-medium text-terracotta">
+                    0{i + 1}
+                  </span>
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-charcoal/5 text-charcoal/40 transition-colors duration-500 group-hover:bg-terracotta/10 group-hover:text-terracotta">
+                    <MapPin className="h-3.5 w-3.5" strokeWidth={1.75} />
+                  </span>
+                </div>
+
+                <h3 className="mt-3 font-display text-[clamp(1.25rem,2vw,1.5rem)] font-[330] leading-tight tracking-tight">
+                  {it.city}
+                </h3>
+                <p className="measure mt-2 text-sm leading-relaxed text-charcoal/75">
+                  {it.text}
+                </p>
+              </div>
+
+              <div className="relative z-10 mt-5">
+                <TextLink href={it.to}>
+                  {it.link}
+                </TextLink>
+              </div>
+            </motion.div>
           ))}
-        </ol>
+        </div>
       </div>
     </section>
   );

@@ -64,9 +64,9 @@ export const locationsPage = {
   footprint: "We carefully select locations that offer a perfect blend of high investment potential, connectivity, and quality of life.",
   places: [
     { city: "Bengaluru", text: "Our corporate headquarters and center of operations. Leading strategic channel partner investments and commercial realty across the capital city.", image: images.locBengaluru },
-    { city: "Mysuru", text: "Home to Palm Serenity — an 8-acre premium managed farmland resort community offering tranquility near the heritage city.", image: images.locMysuru, link: "View Palm Serenity", slug: "palm-serenity" as const },
-    { city: "Gadag", text: "Showcasing Royal Park, a RERA-approved Gated Community in Malasamudra offering prestigious plotted developments with world-class amenities.", image: images.locGadag, link: "View Royal Park", slug: "royal-park" as const },
-    { city: "Gundlupet", text: "Experience Dollars Colony, premium residential plots positioned at the gateway to the Nilgiris, blending natural beauty with investment security.", image: images.locGundlupet, link: "View Dollars Colony", slug: "dollars-colony" as const },
+    { city: "Mysuru", text: "Home to Palm Serenity — an 8-acre premium managed farmland resort community offering tranquility near the heritage city.", image: images.palmSerenityView, link: "View Palm Serenity", slug: "palm-serenity" as const },
+    { city: "Gadag", text: "Showcasing Royal Park, a RERA-approved Gated Community in Malasamudra offering prestigious plotted developments with world-class amenities.", image: images.royalParkView, link: "View Royal Park", slug: "royal-park" as const },
+    { city: "Gundlupet", text: "Experience Dollars Colony, premium residential plots positioned at the gateway to the Nilgiris, blending natural beauty with investment security.", image: images.dollarsColonyMountain, link: "View Dollars Colony", slug: "dollars-colony" as const },
   ],
   whyEyebrow: "Why Karnataka",
   whyTitle: "The Real Estate Epicenter",

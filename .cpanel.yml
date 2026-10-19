@@ -2,4 +2,4 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home2/peopleco/public_html/
-    - /bin/cp -R dist/* $DEPLOYPATH
+    - /bin/cp -R /home2/peopleco/repositories/Royal-Infra/dist/* $DEPLOYPATH

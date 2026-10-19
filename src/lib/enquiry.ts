@@ -13,12 +13,36 @@ export const enquirySchema = z.object({
 });
 export type Enquiry = z.infer<typeof enquirySchema>;
 
-/**
- * STUB: enquiries are not stored or sent anywhere yet.
- * Wire this to a backend (database + owner email) before launch.
- */
-export async function submitEnquiry(data: Enquiry): Promise<{ ok: true } | { ok: false; error: string }> {
-  if (data.website) return { ok: true }; // bot: silently accept
-  await new Promise((r) => setTimeout(r, 600));
-  return { ok: true };
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw9FqiWjY7hABPePVEhosMGzz3CA4kYRpwYOnxlGeokGgDxRP84yjohqXLQYnjbAzCv/exec';
+
+export async function submitEnquiry(data: any) {
+  try {
+    const response = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      // Use text/plain to avoid the CORS preflight check
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8',
+      },
+      body: JSON.stringify(data),
+      redirect: 'follow',
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    // If the script returned an error (like the sheet error), pass it up
+    if (result.status === 'error') {
+      console.error("Google Script Error:", result.message);
+      return { ok: false, error: result.message };
+    }
+
+    return { ok: true };
+
+  } catch (error) {
+    console.error('Enquiry submission failed:', error);
+    return { ok: false, error: 'network' };
+  }
 }

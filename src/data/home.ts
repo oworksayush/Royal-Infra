@@ -3,7 +3,7 @@ import { site } from "./site";
 
 export const hero = {
   kicker:
-    "Premium plots, managed farmland and gated communities in Bengaluru, Mysuru, Gadag and Gundlupet",
+    "Premium plots, managed farmland and gated communities in Bengaluru, Mysuru, Gadag, Bellary and Gundlupet",
   title: "Where 70 Years of Trust Meets Tomorrow's Dreams.",
   body: "Discover premium residential plots, managed farmlands, and gated communities across Karnataka's most promising locations.",
 };

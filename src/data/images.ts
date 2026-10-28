@@ -48,6 +48,7 @@ import dcDrone from "@/assets/Dollers Colony/dollars-colony-drone-overview.png";
 import dcMountain from "@/assets/Dollers Colony/dollars-colony-mountain-landscape.png";
 import dcSignboard from "@/assets/Dollers Colony/dollars-colony-signboard.jpg";
 import dcSitePlots1 from "@/assets/Dollers Colony/dollars-colony-site-plots-1.jpg";
+import bellaryProject from "@/assets/Bellary/Ballari-project.jpg";
 
 export type ImageEntry = {
   id: string;
@@ -339,6 +340,14 @@ export const images = {
     alt: "Dollars Colony - On-Site Plot Boundary Markers and Internal Layout",
     width: 1024,
     height: 681,
+    kind: "original",
+  },
+  commercialBellary: {
+    id: "commercial-project-bellary",
+    src: bellaryProject,
+    alt: "Commercial Project - Bellary | Upcoming Landmark Commercial Development",
+    width: 600,
+    height: 450,
     kind: "original",
   },
   locBengaluru: {

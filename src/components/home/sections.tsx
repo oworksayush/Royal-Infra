@@ -437,15 +437,16 @@ export function ProjectsGallery() {
 function ProjectsGalleryInner({ pinned }: { pinned: boolean }) {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const x = useTransform(scrollYProgress, [0, 1], ["0vw", "-200vw"]);
+  const count = homeProjects.length;
+  const x = useTransform(scrollYProgress, [0, 1], ["0vw", `-${(count - 1) * 100}vw`]);
   const bg = useTransform(
     scrollYProgress,
-    [0, 0.45, 0.55, 1],
-    ["oklch(0.37 0.05 35)", "oklch(0.53 0.04 125)", "oklch(0.53 0.04 125)", "oklch(0.27 0.01 90)"],
+    [0, 0.33, 0.66, 1],
+    ["oklch(0.37 0.05 35)", "oklch(0.53 0.04 125)", "oklch(0.27 0.01 90)", "oklch(0.35 0.06 40)"],
   );
   const imgX = useTransform(scrollYProgress, [0, 1], ["4%", "-4%"]);
   const [idx, setIdx] = useState(0);
-  useMotionValueEvent(scrollYProgress, "change", (v) => setIdx(Math.round(v * 2)));
+  useMotionValueEvent(scrollYProgress, "change", (v) => setIdx(Math.min(count - 1, Math.round(v * (count - 1)))));
 
   const header = (
     <div className="flex flex-wrap items-end justify-between gap-4">
@@ -461,7 +462,7 @@ function ProjectsGalleryInner({ pinned }: { pinned: boolean }) {
           style={{ WebkitTextStroke: "1px var(--limestone)" }}
           aria-hidden
         >
-          {idx + 1} / 3
+          {idx + 1} / {homeProjects.length}
         </p>
       )}
     </div>
@@ -477,7 +478,7 @@ function ProjectsGalleryInner({ pinned }: { pinned: boolean }) {
       >
         <div className="container-x">{header}</div>
 
-        <ol className="container-x mt-12 grid gap-14 sm:gap-16 lg:grid-cols-3 lg:gap-8">
+        <ol className="container-x mt-12 grid gap-14 sm:gap-16 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
           {homeProjects.map((p) => (
             <li key={p.slug} className="group flex flex-col">
               <div className="overflow-hidden rounded-2xl sm:rounded-3xl">
@@ -521,7 +522,7 @@ function ProjectsGalleryInner({ pinned }: { pinned: boolean }) {
       ref={ref}
       style={{ backgroundColor: bg }}
       aria-labelledby="projects-h"
-      className="relative h-[300vh] text-limestone"
+      className="relative h-[400vh] text-limestone"
     >
       <div className="sticky top-0 flex h-screen flex-col overflow-hidden">
         <div className="container-x pt-20 lg:pt-14">{header}</div>
@@ -719,7 +720,7 @@ export function WhereWeBuild() {
         </div>
 
         {/* ── 2x2 Grid: Compact boxes to fit perfectly on screen ── */}
-        <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:mt-12 lg:gap-5">
+        <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-5">
           {whereWeBuild.items.map((it, i) => (
             <motion.div
               key={it.city}

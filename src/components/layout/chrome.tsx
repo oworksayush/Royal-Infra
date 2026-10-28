@@ -162,57 +162,57 @@ export function Header() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 12 }}
                         transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                        className="absolute left-1/2 top-full w-[640px] -translate-x-1/2 pt-3"
+                        className="absolute left-1/2 top-full w-[820px] max-w-[92vw] -translate-x-1/2 pt-3"
                       >
                         <div className="overflow-hidden rounded-2xl border border-limestone/10 bg-charcoal/95 shadow-2xl shadow-charcoal/50 backdrop-blur-xl">
-                          <div className="grid grid-cols-3 gap-4 p-5">
-                            {homeProjects.map((p, i) => (
-                              <motion.a
-                                key={p.slug}
-                                href={`/projects/${p.slug}`}
-                                initial={{ opacity: 0, y: 8 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{
-                                  delay: 0.05 + i * 0.06,
-                                  duration: 0.4,
-                                  ease: [0.22, 1, 0.36, 1],
-                                }}
-                                className="group block"
-                              >
-                                <div className="aspect-[4/3] overflow-hidden rounded-xl bg-limestone/5">
-                                  <img
-                                    src={p.image.src}
-                                    alt=""
-                                    width={p.image.width}
-                                    height={p.image.height}
-                                    loading="lazy"
-                                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                                  />
-                                </div>
-                                <p className="mt-3 font-display text-[0.95rem] leading-tight transition-colors group-hover:text-terracotta">
-                                  {p.name}
-                                </p>
-                                <p className="mt-0.5 text-xs text-limestone/60">{p.location}</p>
-                              </motion.a>
-                            ))}
-                          </div>
+                            <div className="grid grid-cols-2 gap-4 p-5 sm:grid-cols-4">
+                              {homeProjects.map((p, i) => (
+                                <motion.a
+                                  key={p.slug}
+                                  href={`/projects/${p.slug}`}
+                                  initial={{ opacity: 0, y: 8 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  transition={{
+                                    delay: 0.05 + i * 0.06,
+                                    duration: 0.4,
+                                    ease: [0.22, 1, 0.36, 1],
+                                  }}
+                                  className="group block"
+                                >
+                                  <div className="aspect-[4/3] overflow-hidden rounded-xl bg-limestone/5">
+                                    <img
+                                      src={p.image.src}
+                                      alt=""
+                                      width={p.image.width}
+                                      height={p.image.height}
+                                      loading="lazy"
+                                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                                    />
+                                  </div>
+                                  <p className="mt-3 font-display text-[0.95rem] leading-tight transition-colors group-hover:text-terracotta">
+                                    {p.name}
+                                  </p>
+                                  <p className="mt-0.5 text-xs text-limestone/60">{p.location}</p>
+                                </motion.a>
+                              ))}
+                            </div>
 
-                          <div className="flex items-center justify-between border-t border-limestone/10 px-5 py-3.5">
-                            <p className="text-xs text-limestone/55">
-                              Explore premium plots across Karnataka
-                            </p>
-                            <a
-                              href="/projects"
-                              className="group inline-flex items-center gap-1.5 text-xs font-medium text-terracotta transition-colors hover:text-limestone"
-                            >
-                              View all projects
-                              <ArrowRight
-                                className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1"
-                                strokeWidth={2}
-                              />
-                            </a>
+                            <div className="flex items-center justify-between border-t border-limestone/10 px-5 py-3.5">
+                              <p className="text-xs text-limestone/55">
+                                Explore premium plots across Karnataka
+                              </p>
+                              <a
+                                href="/projects"
+                                className="group inline-flex items-center gap-1.5 text-xs font-medium text-terracotta transition-colors hover:text-limestone"
+                              >
+                                View all projects
+                                <ArrowRight
+                                  className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1"
+                                  strokeWidth={2}
+                                />
+                              </a>
+                            </div>
                           </div>
-                        </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -299,20 +299,20 @@ export function Header() {
               ))}
             </nav>
 
-            <div className="container-x mt-auto grid grid-cols-3 gap-3 pb-10 pt-10">
-              {homeProjects.map((p) => (
-                <a key={p.slug} href={`/projects/${p.slug}`} onClick={() => setOpen(false)}>
-                  <img
-                    src={p.image.src}
-                    alt=""
-                    width={p.image.width}
-                    height={p.image.height}
-                    className="aspect-[4/5] w-full rounded-2xl object-cover"
-                  />
-                  <span className="mt-2 block text-sm">{p.name}</span>
-                </a>
-              ))}
-            </div>
+              <div className="container-x mt-auto grid grid-cols-2 gap-3 pb-10 pt-10 sm:grid-cols-4">
+                {homeProjects.map((p) => (
+                  <a key={p.slug} href={`/projects/${p.slug}`} onClick={() => setOpen(false)}>
+                    <img
+                      src={p.image.src}
+                      alt=""
+                      width={p.image.width}
+                      height={p.image.height}
+                      className="aspect-[4/5] w-full rounded-2xl object-cover"
+                    />
+                    <span className="mt-2 block text-sm">{p.name}</span>
+                  </a>
+                ))}
+              </div>
           </motion.div>
         )}
       </AnimatePresence>

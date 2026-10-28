@@ -1,7 +1,7 @@
 import { images, original, type ImageEntry } from "./images";
 
 export type Project = {
-  slug: "palm-serenity" | "royal-park" | "dollars-colony";
+  slug: "palm-serenity" | "royal-park" | "dollars-colony" | "commercial-project-bellary";
   name: string;
   subtitle: string;
   tag: string;
@@ -30,14 +30,14 @@ export const projects: Project[] = [
     slug: "palm-serenity",
     name: "Palm Serenity",
     subtitle: "An 8-Acre Boutique Farm Resort & Managed Farmland Community in Mysuru",
-    tag: "Pre-Launch Opportunity",
-    listTag: "Pre-Launch",
+    tag: "Ready to Move Opportunity",
+    listTag: "Ready to Move",
     listMeta: "Mysuru • Managed Farmland",
     listText: "An 8-acre boutique farm resort community in Mysuru with premium farm plots starting from 6,024 sq. ft. Designed for luxury sustainable living and weekend retreats.",
     chips: ["8 Acres Enclave", "Plots from 6,024 sq.ft", "Price on Request"],
     meta: {
       title: "Palm Serenity Mysuru | 8-Acre Managed Farmland | Royal Infra",
-      description: "Palm Serenity: 8-acre boutique managed farmland in Mysuru with farm plots from 6,024 sq. ft., orchards, pool and cafes. Pre-launch bookings open.",
+      description: "Palm Serenity: 8-acre boutique managed farmland in Mysuru with farm plots from 6,024 sq. ft., orchards, pool and cafes. Ready to Move bookings open.",
     },
     hero: images.palmSerenity,
     facts: [
@@ -311,20 +311,20 @@ export const projects: Project[] = [
         a: "Call the sales team or submit an enquiry through the official website. Share your preferred plot size, intended use and any questions about pricing or documentation so the team can provide relevant information."
       }
     ],
-    cta: { title: "Secure Your Piece of Paradise", body: "Contact us today for exclusive pre-launch pricing and site visits.", button: "Book a Site Visit" },
+    cta: { title: "Secure Your Piece of Paradise", body: "Contact us today for exclusive Ready to Move pricing and site visits.", button: "Book a Site Visit" },
   },
   {
     slug: "royal-park",
     name: "Royal Park",
     subtitle: "Prestigious Gated Plotted Development in Malasamudra, Gadag",
-    tag: "RERA Approved Gated Community",
+    tag: "New Launch",
     listTag: "RERA Approved",
     listMeta: "Gadag • Gated Community",
     listText: "RERA-approved prestigious gated plotted development in Malasamudra, Gadag with 70% open green space, 9m asphalted avenues, and world-class resort amenities.",
-    chips: ["70% Open Space", "9m Wide Roads", "RERA Approved"],
+    chips: ["70% Open Space", "9m Wide Roads", "New Launched"],
     meta: {
       title: "Royal Park Gadag | RERA Approved Gated Plots | Royal Infra",
-      description: "RERA-approved gated plotted community in Malasamudra, Gadag: 70% open space, 9m asphalt roads, clubhouse, sports facilities and 24/7 security.",
+      description: "Newly lanuch gated plotted community in Malasamudra, Gadag: 70% open space, 9m asphalt roads, clubhouse, sports facilities and 24/7 security.",
     },
     hero: images.royalPark,
     facts: [
@@ -350,7 +350,7 @@ export const projects: Project[] = [
       { title: "70% Open Space", text: "Spacious, breathable township layout immersed in green landscapes." },
       { title: "9m Wide Roads", text: "Asphalted wide avenues designed for smooth flow and easy navigation." },
       { title: "Underground Utilities", text: "Concealed underground electricity, water, and sewage network." },
-      { title: "RERA Approved", text: "100% legally clear, government approved, and bank-loan ready." },
+      { title: "New Launch", text: "100% legally clear, government approved, and bank-loan ready." },
       { title: "Prime Location", text: "Strategic positioning near Medical College & NH connectivity." },
       { title: "24/7 Gated Security", text: "Secured gated entrance with security staff and perimeter surveillance." },
     ],
@@ -394,7 +394,7 @@ export const projects: Project[] = [
     name: "Dollars Colony",
     subtitle: "Premium Plotted Development at the Scenic Gateway to Nilgiris, Gundlupet",
     tag: "Prime Plotted Community",
-    listTag: "Now Open",
+    listTag: "New Launch",
     listMeta: "Gundlupet • Premium Plots",
     listText: "Premium residential plotted community strategically positioned at the gateway to the Nilgiris in Gundlupet, Karnataka, offering high capital appreciation potential.",
     chips: ["Gateway to Nilgiris", "Clear Title Plots", "High Growth Zone"],
@@ -455,6 +455,102 @@ export const projects: Project[] = [
     ],
     cta: { title: "Invest in the Future", body: "Secure your premium plot at Dollars Colony today.", button: "Contact Us" },
   },
+  {
+    slug: "commercial-project-bellary",
+    name: "Commercial Project - Bellary",
+    subtitle: "Upcoming Landmark Commercial Hub & Retail Destination in Bellary",
+    tag: "Upcoming Project",
+    listTag: "Upcoming Project",
+    listMeta: "Bellary • Commercial Realty",
+    listText: "An upcoming landmark commercial development strategically located in the prime business corridor of Bellary. Designed for high footfall, premium retail, and business excellence.",
+    chips: ["Upcoming Project", "Prime Commercial Hub", "High Growth Corridor", "Details Revealing Soon"],
+    meta: {
+      title: "Commercial Project Bellary | Upcoming Commercial Development | Royal Infra",
+      description: "Upcoming landmark commercial real estate project in Bellary by Royal Infra. Premium commercial and retail spaces in a prime business corridor. Details revealing soon.",
+    },
+    hero: images.commercialBellary,
+    facts: [
+      { value: "Bellary", label: "Prime Location" },
+      { value: "Commercial", label: "Property Type" },
+      { value: "Upcoming", label: "Project Status" },
+      { value: "Coming Soon", label: "Launch Phase" },
+    ],
+    overview: {
+      eyebrow: "Upcoming Commercial Landmark",
+      title: "Prime Business Destination in Bellary",
+      text: "Royal Infra is proud to announce an upcoming commercial landmark in Bellary. Conceived to cater to the expanding economic and commercial needs of the region, this project will bring together prime retail prominence, contemporary business architecture, and superior connectivity. Full details, floor layouts, and launch announcements are coming soon.",
+      specs: [
+        { label: "Location", value: "Prime Business Corridor, Bellary, Karnataka" },
+        { label: "Property Type", value: "Commercial Realty & Retail Arcade" },
+        { label: "Project Status", value: "Upcoming Project — Launching Soon" },
+        { label: "Enquiries", value: "Pre-Launch Priority Registrations Open" },
+      ],
+    },
+    whoFor: "This upcoming commercial development is envisioned for retail brands, corporate enterprises, independent businesses, and forward-thinking commercial property investors seeking strong rental yield potential and high capital appreciation in the booming commercial hub of Bellary.",
+    highlightsTitle: "Upcoming Project Highlights",
+    highlights: [
+      { title: "Strategic Commercial Corridor", text: "Prime accessibility and excellent road connectivity in Bellary's most dynamic business zone." },
+      { title: "High-Traffic Retail Frontage", text: "Architectural planning designed to maximize visibility and consumer footfall for retail and businesses." },
+      { title: "Flexible Commercial Configurations", text: "Tailored to accommodate retail stores, corporate offices, showrooms, and service centers." },
+      { title: "Modern Building Infrastructure", text: "Engineered with modern power backup, dedicated parking, high-speed connectivity, and CCTV security." },
+      { title: "70+ Years of Developer Trust", text: "Backed by Royal Infra's seven decades of entrepreneurial integrity and reliability across Karnataka." },
+      { title: "Pre-Launch Advantage", text: "Early priority registration allows investors and business owners to be first in line when inventory is unveiled." },
+    ],
+    amenitiesTitle: "Planned Features & Amenities",
+    amenities: [
+      "Prime Road Frontage",
+      "Dedicated Parking Spaces",
+      "High-Speed Elevators",
+      "24/7 Power Backup",
+      "Round-the-Clock CCTV & Security",
+      "Modern Exterior Facade",
+      "Wide Common Corridors",
+      "Fire Detection & Safety Systems",
+    ],
+    gallery: [
+      images.commercialBellary,
+    ],
+    location: {
+      eyebrow: "Location Advantage",
+      title: "Strategic Commercial Position in Bellary",
+      text: "Bellary is a historic commercial and industrial powerhouse in Karnataka. Situated at the junction of key transportation and trade corridors, this upcoming project offers unparalleled connectivity for businesses, retailers, and investors.",
+      figures: [
+        { value: "Bellary", label: "Strategic City" },
+        { value: "Prime", label: "Commercial Hub" },
+        { value: "Upcoming", label: "Launch Soon" },
+      ],
+    },
+    approvals: [
+      { label: "Project Status", value: "Upcoming Commercial Project", note: "Layout planning and statutory documentation are currently in progress. Complete approvals will be published upon official launch." },
+    ],
+    faqs: [
+      {
+        q: "What is the upcoming Commercial Project in Bellary?",
+        a: "It is Royal Infra's upcoming landmark commercial development situated in Bellary's high-demand commercial corridor, offering strategic spaces for retail, dining, corporate offices, and commercial investors.",
+      },
+      {
+        q: "When will the complete project details and floor plans be revealed?",
+        a: "Detailed architectural masterplans, unit configurations, and launch dates are currently in preparation and will be unveiled soon. You can register your interest for early notification.",
+      },
+      {
+        q: "Where in Bellary is the project located?",
+        a: "The project is positioned along a prominent commercial corridor in Bellary with high accessibility and footfall potential. Specific survey and address details will be shared upon official launch.",
+      },
+      {
+        q: "Can I register my interest before the official launch?",
+        a: "Yes. You can submit an enquiry through our website or contact our advisory team to register for early priority invitations, pre-launch details, and space allocations.",
+      },
+      {
+        q: "What types of commercial spaces will be available?",
+        a: "The project is planned to accommodate modern retail outlets, commercial showrooms, corporate offices, and business spaces.",
+      },
+      {
+        q: "Who is developing this project?",
+        a: "The project is being developed by Royal Infra, backed by over 70 years of entrepreneurial legacy, trust, and real estate excellence across Karnataka.",
+      },
+    ],
+    cta: { title: "Be the First to Know", body: "Register your interest today to receive exclusive pre-launch previews and priority updates for our upcoming Bellary commercial project.", button: "Register Interest" },
+  },
 ];
 
 export const getProject = (slug: string) => projects.find((p) => p.slug === slug);
@@ -478,6 +574,6 @@ export const projectsPage = {
   cta: { title: "Ready to Build Your Legacy?", body: "Connect with our experts to find the perfect property that matches your vision." },
   meta: {
     title: "Our Projects | Plotted Communities & Farmland – Royal Infra",
-    description: "Explore Royal Infra's developments: Palm Serenity (Mysuru), Royal Park (Gadag) and Dollars Colony (Gundlupet). Premium amenities and clear legal titles.",
+    description: "Explore Royal Infra's developments: Palm Serenity (Mysuru), Royal Park (Gadag), Dollars Colony (Gundlupet), and upcoming Commercial Project (Bellary). Premium amenities and clear legal titles.",
   },
 };

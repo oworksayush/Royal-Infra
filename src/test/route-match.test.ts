@@ -9,6 +9,10 @@ describe("matchRoute", () => {
   });
 
   it("matches a project slug and returns not-found for unknown paths", () => {
+    expect(matchRoute("/projects/commercial-project-bellary")).toEqual({
+      page: "project",
+      slug: "commercial-project-bellary",
+    });
     expect(matchRoute("/projects/palm-serenity")).toEqual({
       page: "project",
       slug: "palm-serenity",

@@ -12,7 +12,7 @@ export const about = {
   storyEyebrow: "Our Story & Heritage",
   storyTitle: "From Trading Routes to Dream Routes",
   storyImage: { ...images.heritage, alt: "Building your own legacy with Royal Infra" },
-  p1: "In 1950, when Karnataka was still Mysore State, the Umachagi family began their entrepreneurial odyssey with a simple belief: trust is the foundation of every great venture. Seven decades later, that belief has grown into a ₹200+ crore empire spanning transport, retail, banking, and dairy touching lives across Hubli, Dharwad, Belgaum, Gadag, and Bengaluru.",
+  p1: "In 1950, when Karnataka was still Mysore State, the Umachagi family began their entrepreneurial odyssey with a simple belief: trust is the foundation of every great venture. Seven decades later, that belief has grown into a ₹200+ crore empire spanning transport, retail, banking, and dairy touching lives across Hubli, Dharwad, Belgaum, Gadag, Bellary, and Bengaluru.",
   p2: "Royal Infra represents the culmination of this legacy where traditional values meet modern vision. We've transformed over 300 acres into thriving communities, delivered keys to 5,000+ families, and partnered with industry giants like Reliance, Aditya Birla, and Malabar Gold across 5.5 lakh square feet of premium commercial space.",
   figures: [
     { value: "₹200+ crore", label: "empire spanning transport, retail, banking, and dairy" },
@@ -54,18 +54,19 @@ export const about = {
 export const locationsPage = {
   meta: {
     title: "Strategic Project Locations in Karnataka | Royal Infra Realty",
-    description: "Explore Royal Infra's strategic real estate investment locations across Karnataka: Bengaluru, Mysuru, Gadag, and Gundlupet.",
+    description: "Explore Royal Infra's strategic real estate investment locations across Karnataka: Bengaluru, Mysuru, Gadag, Bellary, and Gundlupet.",
   },
   crumb: "Locations",
   title: "Our Premium Locations Across Karnataka",
   intro: "Discover our curated real estate developments in the most promising cities and towns of Karnataka.",
-  marquee: ["Bengaluru", "Mysuru", "Gadag", "Gundlupet"],
+  marquee: ["Bengaluru", "Mysuru", "Gadag", "Bellary", "Gundlupet"],
   footprintEyebrow: "Our Footprint",
   footprint: "We carefully select locations that offer a perfect blend of high investment potential, connectivity, and quality of life.",
   places: [
     { city: "Bengaluru", text: "Our corporate headquarters and center of operations. Leading strategic channel partner investments and commercial realty across the capital city.", image: images.locBengaluru },
     { city: "Mysuru", text: "Home to Palm Serenity — an 8-acre premium managed farmland resort community offering tranquility near the heritage city.", image: images.palmSerenityView, link: "View Palm Serenity", slug: "palm-serenity" as const },
     { city: "Gadag", text: "Showcasing Royal Park, a RERA-approved Gated Community in Malasamudra offering prestigious plotted developments with world-class amenities.", image: images.royalParkView, link: "View Royal Park", slug: "royal-park" as const },
+    { city: "Bellary", text: "Upcoming landmark commercial real estate hub situated in the premier business corridor of Bellary, designed for retail excellence and corporate spaces.", image: images.commercialBellary, link: "View Commercial Project (Upcoming)", slug: "commercial-project-bellary" as const },
     { city: "Gundlupet", text: "Experience Dollars Colony, premium residential plots positioned at the gateway to the Nilgiris, blending natural beauty with investment security.", image: images.dollarsColonyMountain, link: "View Dollars Colony", slug: "dollars-colony" as const },
   ],
   whyEyebrow: "Why Karnataka",
@@ -77,7 +78,7 @@ export const locationsPage = {
 export const contactPage = {
   meta: {
     title: "Contact Royal Infra Realty | Bengaluru Office & Site Visits",
-    description: "Get in touch with Royal Infra Realty. Book a guided site visit for Palm Serenity, Royal Park or Dollars Colony. Call +91 9187712547 or visit our Bengaluru office.",
+    description: "Get in touch with Royal Infra Realty. Book a guided site visit for Palm Serenity, Royal Park, Dollars Colony or enquire about upcoming commercial developments in Bellary. Call +91 9187712547 or visit our Bengaluru office.",
   },
   crumb: "Contact",
   title: "Get in Touch With Royal Infra",
@@ -86,7 +87,7 @@ export const contactPage = {
   h2: "Reach Out to Us",
   body: "Have questions about our plotted developments or wish to schedule a guided site visit? Our advisory team is available 6 days a week.",
   formTitle: "Send an Enquiry",
-  projectOptions: ["Palm Serenity (Mysuru)", "Royal Park (Gadag)", "Dollars Colony (Gundlupet)", "Commercial Projects (Bellary)", "General Inquiry"],
+  projectOptions: ["Palm Serenity (Mysuru)", "Royal Park (Gadag)", "Dollars Colony (Gundlupet)", "Commercial Project - Bellary (Upcoming)", "General Inquiry"],
   mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.892095361208!2d77.5960458!3d12.9787498!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae16719b0d24e1%3A0xc3b8398e4f52627e!2sInfantry%20Rd%2C%20Bengaluru%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1690000000000!5m2!1sen!2sin",
   cta: { title: "Explore Our Properties", body: "Discover plots and residential communities across Karnataka." },
 };

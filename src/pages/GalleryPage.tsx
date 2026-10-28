@@ -118,7 +118,7 @@ function VideoGallerySection() {
             className="mt-4 text-base sm:text-lg text-charcoal/75 leading-relaxed"
           >
             Watch real site footage, landscape fly-throughs, and community highlights from
-            our prime projects across Bengaluru, Mysuru, Gadag, and Gundlupet.
+            our prime projects across Bengaluru, Mysuru, Gadag, Bellary, and Gundlupet.
           </motion.p>
         </div>
 

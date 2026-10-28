@@ -22,7 +22,7 @@ import "./styles.css";
 const homeMeta = {
   title: "Royal Infra Realty | Plots & Managed Farmland in Karnataka",
   description:
-    "Royal Infra Realty brings 70+ years of trust to premium residential plots, managed farmland & gated communities across Bengaluru, Mysuru, Gadag & Gundlupet.",
+  "Royal Infra Realty brings 70+ years of trust to premium residential plots, managed farmland, commercial realty & gated communities across Bengaluru, Mysuru, Gadag, Bellary & Gundlupet.",
 };
 
 export default function App() {

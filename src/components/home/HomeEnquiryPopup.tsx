@@ -40,7 +40,7 @@ function LiveOfferNotification({ show }: { show: boolean }) {
                   Live Offer
                 </p>
                 <p className="mt-1 text-sm leading-snug text-limestone/85">
-                  Pre-launch pricing on Palm Serenity. Talk to our team.
+                  Ready to Move pricing on Palm Serenity. Talk to our team.
                 </p>
                 <span className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-limestone/70 transition-colors group-hover:text-limestone">
                   Enquire now

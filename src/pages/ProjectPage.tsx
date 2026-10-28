@@ -33,7 +33,7 @@ export function ProjectPage({ slug }: { slug: string }) {
       <section aria-labelledby="rel-h" className="section-y bg-rosewood text-limestone">
         <div className="container-x">
           <SectionHead id="rel-h" eyebrow="Related projects" title="More from Royal Infra" />
-          <ul className="mt-14 grid gap-10 md:grid-cols-2">
+          <ul className="mt-14 grid gap-10 md:grid-cols-2 lg:grid-cols-3">
             {others.map((o) => (
               <li key={o.slug}>
                 <a href={`/projects/${o.slug}`} className="group grid grid-cols-[120px_1fr] items-center gap-6">
@@ -65,7 +65,7 @@ export function ProjectPage({ slug }: { slug: string }) {
         <ButtonLink href="/contact-us" tone="light">{p.cta.button}</ButtonLink>
       </Cta>
       <NextProject p={next} />
-      <p className="bg-limestone py-6 text-center text-sm text-charcoal/75">Images are representative; actual development may vary.</p>
+
     </>
   );
 }
@@ -184,6 +184,36 @@ function Gallery({ images }: { images: ImageEntry[] }) {
   const up = useTransform(scrollYProgress, [0, 1], ["6%", "-10%"]);
   const down = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
   const [open, setOpen] = useState<number | null>(null);
+  if (images.length === 1) {
+    const single = images[0]!;
+    return (
+      <section aria-labelledby="gal-h" className="section-y bg-olive text-limestone">
+        <div className="container-x">
+          <SectionHead id="gal-h" eyebrow="Visual Preview" title="Upcoming Project Preview" />
+          <div className="mx-auto mt-12 max-w-4xl">
+            <button
+              type="button"
+              onClick={() => setOpen(0)}
+              aria-label={`Open image: ${single.alt}`}
+              className="group block w-full text-left"
+            >
+              <motion.div layoutId={`g-${single.id}`} className="overflow-hidden rounded-2xl shadow-2xl sm:rounded-3xl">
+                <CurtainImage image={single} className="aspect-[4/3] w-full sm:aspect-[16/10]" curtain="bg-olive" />
+              </motion.div>
+            </button>
+            <div className="mt-5 flex flex-col justify-between gap-3 text-sm text-limestone/80 sm:flex-row sm:items-center">
+              <p className="font-display text-base text-limestone">{single.alt}</p>
+              <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-limestone/15 px-3 py-1 text-xs font-medium uppercase tracking-wider text-limestone">
+                More Visuals Releasing Soon
+              </span>
+            </div>
+          </div>
+        </div>
+        <Lightbox images={images} index={open} setIndex={setOpen} />
+      </section>
+    );
+  }
+
   const cols: ImageEntry[][] = [[], [], []];
   images.forEach((img, i) => cols[i % 3]!.push(img));
   return (
@@ -268,11 +298,15 @@ function Location({ p }: { p: Project }) {
           <h3 className="text-h3">Neighbourhood and connectivity</h3>
           {p.location.text && <p className="measure mt-6 text-lg">{p.location.text}</p>}
           {p.location.figures && (
-            <dl className="mt-8 grid gap-8 sm:grid-cols-3">
+            <dl className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-6">
               {p.location.figures.map((f) => (
                 <div key={f.label} className="border-t border-charcoal/15 pt-5">
-                  <dd className="text-display-l">{f.value}</dd>
-                  <dt className="mt-2 text-charcoal/75">{f.label}</dt>
+                  <dd className="font-display text-[clamp(1.75rem,2.5vw,2.5rem)] font-light leading-tight tracking-tight text-charcoal break-words">
+                    {f.value}
+                  </dd>
+                  <dt className="mt-2 text-sm text-charcoal/75 leading-snug">
+                    {f.label}
+                  </dt>
                 </div>
               ))}
             </dl>

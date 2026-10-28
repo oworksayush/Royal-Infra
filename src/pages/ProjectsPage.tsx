@@ -5,7 +5,7 @@ import { Cta } from "@/components/home/sections";
 import { ButtonLink } from "@/components/ui-brand";
 import { cn } from "@/lib/utils";
 
-const bgs = ["bg-rosewood", "bg-olive", "bg-charcoal"];
+const bgs = ["bg-rosewood", "bg-olive", "bg-charcoal", "bg-rosewood"];
 
 export function ProjectsPage() {
   return (
@@ -23,7 +23,7 @@ export function ProjectsPage() {
             aria-labelledby={`p-${p.slug}`}
             className={cn(
               "sticky top-0 flex min-h-screen items-center text-limestone",
-              bgs[i],
+              bgs[i % bgs.length],
             )}
             style={{ zIndex: i + 1 }}
           >
@@ -32,7 +32,7 @@ export function ProjectsPage() {
                 <CurtainImage
                   image={p.hero}
                   className="aspect-[4/5] w-full"
-                  curtain={bgs[i] ?? "bg-charcoal"}
+                  curtain={bgs[i % bgs.length] ?? "bg-charcoal"}
                 />
               </div>
               <div className="lg:col-span-6 lg:col-start-7">
